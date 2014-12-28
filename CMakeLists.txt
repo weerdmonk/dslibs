@@ -1,0 +1,15 @@
+
+cmake_minimum_required(VERSION 2.6)
+project(dslibs)
+
+MESSAGE("CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}")
+MESSAGE("CMAKE_BINARY_DIR=${CMAKE_BINARY_DIR}")
+
+set(CMAKE_BINARY_DIR "${PROJECT_SOURCE_DIR}/build")
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin")
+
+include_directories("${PROJECT_SOURCE_DIR}/inc")
+
+add_subdirectory(src)
