@@ -1,0 +1,11 @@
+
+# this is gitignore file for dslibs
+
+# ignore vi editor swap files
+*.swp
+
+#ignore ctags files
+tags
+
+# ignore cmake build directory
+build
