@@ -12,7 +12,7 @@
  * optimize design
  */
 
-#include "../include/stack.h"
+#include <stack.h>
 
 Stack ds_stack_new(size_t capacity)
 {
