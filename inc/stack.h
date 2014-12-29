@@ -34,7 +34,7 @@ static inline unsigned char _ds_stack_full_check(Stack s)
 
 Stack ds_stack_new(size_t capacity);
 
-Stack ds_stack_spush(Stack s, void *data);
+Stack ds_stack_push(Stack s, void *data);
 
 void *ds_stack_pop(Stack s);
 
