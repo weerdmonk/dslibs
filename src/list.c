@@ -202,7 +202,7 @@ List ds_list_delete_pos(List l, void **data, int pos)
    return l;
 }
 
-int ds_list_search(List l, void *data)
+LNode ds_list_search(List l, void *data, int *pos)
 {
    LNode dest;
    int _pos;
@@ -210,20 +210,66 @@ int ds_list_search(List l, void *data)
 	if (!l)
 	{
 		DS_LIB_ERR("ds_list_search: supplied argument 1 is not a valid List!");
-		return -1;
+		return NULL;
 	}
 
 	if (!data)
 	{
 		DS_LIB_ERR("ds_list_search: no data to search for!");
-		return -1;
+		return NULL;
+	}
+
+   for(dest = l->head, _pos = 0; dest != NULL; dest = dest->next, _pos++)
+   {
+      if (dest->data == data)
+      {
+         *pos = _pos;
+         return dest;
+      }
+   }
+
+   return NULL;
+}
+
+List ds_list_update_pos(List l, void **data_old, void *data_new, int pos)
+{
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_update_pos: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+	if (!data_new)
+	{
+		DS_LIB_ERR("ds_list_update_pos: no data to update!");
+		return NULL;
 	}
 
    for(dest = l->head, _pos = 0; dest != NULL; dest = dest->next)
    {
-      if (dest->data == data) return _pos;
-      _pos++;
+      if (_pos == pos)
    }
-
-   return -1;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

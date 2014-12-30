@@ -34,7 +34,9 @@ int main(void)
       printf("list node data = %d\n", (int)ln->data);
    }
 
-   printf("%d is at pos = %d\n", 100, ds_list_search(l, 100));
+   ds_list_search(l, 100, &i);
+
+   printf("%d is at pos = %d\n", 100, i);
 
    return 0;
 }

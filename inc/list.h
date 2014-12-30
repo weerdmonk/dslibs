@@ -41,6 +41,10 @@ List ds_list_insert_pos(List l, void *data, int pos);
 
 List ds_list_delete_pos(List l, void **data, int pos);
 
-int ds_list_search(List l, void* data);
+LNode ds_list_search(List l, void* data, int *pos);
+
+List ds_list_update_pos(List l, void **data_old, void *data_new, int pos);
+
+int ds_list_count(List l);
 
 #endif /* LIST_H */
