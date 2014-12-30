@@ -43,7 +43,7 @@ List ds_list_delete_pos(List l, void **data, int pos);
 
 LNode ds_list_search(List l, void* data, int *pos);
 
-List ds_list_update_pos(List l, void **data_old, void *data_new, int pos);
+List ds_list_update_pos(List l, void *data_new, void **data_old, int pos);
 
 int ds_list_count(List l);
 

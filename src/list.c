@@ -145,7 +145,7 @@ List ds_list_insert_pos(List l, void *data, int pos)
    }
    else
    {
-      for(dest = l->head, _pos = 1; dest != NULL; dest = dest->next)
+      for (dest = l->head, _pos = 1; dest != NULL; dest = dest->next)
       {
          if (_pos++ == pos)
          {
@@ -186,7 +186,7 @@ List ds_list_delete_pos(List l, void **data, int pos)
    }
    else
    {
-      for(prev = l->head, _pos = 1; prev->next != NULL; prev = prev->next)
+      for (prev = l->head, _pos = 1; prev->next != NULL; prev = prev->next)
       {
          if (_pos++ == pos)
          {
@@ -219,7 +219,7 @@ LNode ds_list_search(List l, void *data, int *pos)
 		return NULL;
 	}
 
-   for(dest = l->head, _pos = 0; dest != NULL; dest = dest->next, _pos++)
+   for (dest = l->head, _pos = 0; dest != NULL; dest = dest->next, _pos++)
    {
       if (dest->data == data)
       {
@@ -228,14 +228,24 @@ LNode ds_list_search(List l, void *data, int *pos)
       }
    }
 
+   *pos = -1;
    return NULL;
 }
 
-List ds_list_update_pos(List l, void **data_old, void *data_new, int pos)
+List ds_list_update_pos(List l, void *data_new, void **data_old, int pos)
 {
+	LNode dest;
+	int _pos;
+
 	if (!l)
 	{
 		DS_LIB_ERR("ds_list_update_pos: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+	if (!data_old)
+	{
+		DS_LIB_ERR("ds_list_update_pos: no variable to save data from updated node!");
 		return NULL;
 	}
 
@@ -245,13 +255,34 @@ List ds_list_update_pos(List l, void **data_old, void *data_new, int pos)
 		return NULL;
 	}
 
-   for(dest = l->head, _pos = 0; dest != NULL; dest = dest->next)
+   for (dest = l->head, _pos = 0; dest != NULL; dest = dest->next, _pos++)
    {
       if (_pos == pos)
+      {
+        *data_old= dest->data;
+	dest->data = data_new;
+	break;
+      }
    }
+
+	return l;
 }
 
+int ds_list_count(List l)
+{
+	LNode tmp;
+	int cnt;
 
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_update_pos: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+	for (tmp = l->head, cnt = 0; tmp != NULL; tmp = tmp->next, cnt++);
+
+	return cnt;
+}
 
 
 

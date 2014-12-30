@@ -10,7 +10,8 @@
 
 int main(void)
 {
-   int i;
+   LNode ln;
+   int i, j;
 
    List l = ds_list_new(10);
    ds_list_append(l, 20);
@@ -23,20 +24,26 @@ int main(void)
    ds_list_prepend(l, 300);
    ds_list_prepend(l, 400);
 
-   ds_list_insert_pos(l, 23, 9);
-   ds_list_insert_pos(l, 62, 18);
+   ds_list_insert_pos(l, 23, 2);
 
-   ds_list_delete_pos(l, &i, 1);
+   ds_list_delete_pos(l, &j, 4);
 
-   LNode ln;
+   ds_list_update_pos(l, 72,  &i, 6);
+
    for(ln=l->head;ln!=NULL;ln=ln->next)
    {
       printf("list node data = %d\n", (int)ln->data);
    }
 
-   ds_list_search(l, 100, &i);
+   printf("data from deleted node is = %d\n", j);
 
-   printf("%d is at pos = %d\n", 100, i);
+   printf("data from updated node is = %d\n", i);
+
+   ds_list_search(l, 23, &i);
+
+   printf("%d is at pos = %d\n", 23, i);
+
+   printf("number of nodes is %d\n", ds_list_count(l));
 
    return 0;
 }
