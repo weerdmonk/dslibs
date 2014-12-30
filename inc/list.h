@@ -39,4 +39,8 @@ List ds_list_prepend(List l, void *data);
 
 List ds_list_insert_pos(List l, void *data, int pos);
 
+List ds_list_delete_pos(List l, void **data, int pos);
+
+int ds_list_search(List l, void* data);
+
 #endif /* LIST_H */

@@ -1,7 +1,7 @@
 
 /*
  * dslibs v0.1
- * examples
+ * stack example v0.1
  * weerdmonk Dec2014
  *
  */
