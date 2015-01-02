@@ -35,7 +35,11 @@ List ds_list_new(void *data);
 
 List ds_list_append(List l, void *data);
 
+List ds_list_append_val(List l, int data);
+
 List ds_list_prepend(List l, void *data);
+
+List ds_list_prepend_val(List l, int data);
 
 List ds_list_insert_pos(List l, void *data, int pos);
 

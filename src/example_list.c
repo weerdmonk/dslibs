@@ -13,31 +13,32 @@ int main(void)
    LNode ln;
    int i, j;
 
-   List l = ds_list_new(10);
-   ds_list_append(l, 20);
-   ds_list_append(l, 30);
-   ds_list_append(l, 40);
-   ds_list_append(l, 50);
+   List l = ds_list_new(NULL);
+   ds_list_append_val(l, 10);
+   ds_list_append_val(l, 20);
+   ds_list_append_val(l, 30);
+   ds_list_append_val(l, 40);
+   ds_list_append_val(l, 50);
 
-   ds_list_prepend(l, 100);
-   ds_list_prepend(l, 200);
-   ds_list_prepend(l, 300);
-   ds_list_prepend(l, 400);
+   ds_list_prepend_val(l, 100);
+   ds_list_prepend_val(l, 200);
+   ds_list_prepend_val(l, 300);
+   ds_list_prepend_val(l, 400);
 
-   ds_list_insert_pos(l, 23, 2);
+//   ds_list_insert_pos(l, 23, 2);
 
-   ds_list_delete_pos(l, &j, 4);
+//   ds_list_delete_pos(l, &j, 4);
 
-   ds_list_update_pos(l, 72,  &i, 6);
+//   ds_list_update_pos(l, 72,  &i, 6);
 
    for(ln=l->head;ln!=NULL;ln=ln->next)
    {
-      printf("list node data = %d\n", (int)ln->data);
+      printf("list node data = %d\n", *(int*)ln->data);
    }
 
-   printf("data from deleted node is = %d\n", j);
+//   printf("data from deleted node is = %d\n", j);
 
-   printf("data from updated node is = %d\n", i);
+//   printf("data from updated node is = %d\n", i);
 
    ds_list_search(l, 23, &i);
 

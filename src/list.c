@@ -86,7 +86,49 @@ List ds_list_append(List l, void *data)
    }
 
    if (l->head == NULL)
+   {
       l->head = ln;
+      l->tail = l->head;
+   }
+   else
+   {
+      l->tail->next = ln;
+      l->tail = ln;
+   }
+
+	return l;
+}
+
+List ds_list_append_val(List l, int data)
+{
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_append: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+   void *_data = malloc(sizeof(int));
+   if (!_data)
+   {
+      DS_C_ERR(__func__);
+      return l;
+   }
+
+   *(int*)_data = (int)data;
+
+   LNode ln = _ds_list_node_new(_data);
+   if (!ln)
+   {
+		DS_LIB_ERR("ds_list_append: failed to create new list node!");
+      return l;
+   }
+
+
+   if (l->head == NULL)
+   {
+      l->head = ln;
+      l->tail = l->head;
+   }
    else
    {
       l->tail->next = ln;
@@ -111,6 +153,36 @@ List ds_list_prepend(List l, void *data)
 	}
 
    LNode ln = _ds_list_node_new(data);
+   if (!ln)
+   {
+      DS_LIB_ERR("ds_list_prepend: failed to create new list node!");
+      return l;
+   }
+
+   ln->next = l->head;
+   l->head = ln;
+
+	return l;
+}
+
+List ds_list_prepend_val(List l, int data)
+{
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_prepend: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+   void *_data = malloc(sizeof(int));
+   if (!_data)
+   {
+      DS_C_ERR(__func__);
+      return l;
+   }
+
+   *(int*)_data = (int)data;
+
+   LNode ln = _ds_list_node_new(_data);
    if (!ln)
    {
       DS_LIB_ERR("ds_list_prepend: failed to create new list node!");
