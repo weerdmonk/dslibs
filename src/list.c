@@ -64,6 +64,44 @@ List ds_list_new(void *data)
    return l;
 }
 
+void ds_list_del(List l)
+{
+   LNode ln, tmp;
+
+   if (!l)
+   {
+      DS_LIB_ERR("ds_list_del: supplied argument 1 is not a valid List!");
+      return;
+   }
+
+   if (!l->head) return;
+
+   for(ln = l->head; ln != NULL; )
+   {
+      tmp = ln;
+      if (tmp->data) free(tmp->data);
+      ln = ln->next;
+      l->head = ln;
+      free(tmp);
+   }
+
+   l->tail = l->head;
+}
+
+void ds_list_free(List *p_l)
+{
+   if (!*p_l)
+   {
+      DS_LIB_ERR("ds_list_free: supplied argument 1 is not a valid List!");
+      return;
+   }
+
+   ds_list_del(*p_l);
+
+   free(*p_l);
+   *p_l = NULL;
+}
+
 List ds_list_append(List l, void *data)
 {
 	if (!l)
@@ -103,23 +141,23 @@ List ds_list_append_val(List l, int data)
 {
 	if (!l)
 	{
-		DS_LIB_ERR("ds_list_append: supplied argument 1 is not a valid List!");
+		DS_LIB_ERR("ds_list_append_val: supplied argument 1 is not a valid List!");
 		return NULL;
 	}
 
-   void *_data = malloc(sizeof(int));
-   if (!_data)
+   void *p_data = malloc(sizeof(int));
+   if (!p_data)
    {
       DS_C_ERR(__func__);
       return l;
    }
 
-   *(int*)_data = (int)data;
+   *(int*)p_data = (int)data;
 
-   LNode ln = _ds_list_node_new(_data);
+   LNode ln = _ds_list_node_new(p_data);
    if (!ln)
    {
-		DS_LIB_ERR("ds_list_append: failed to create new list node!");
+		DS_LIB_ERR("ds_list_append_val: failed to create new list node!");
       return l;
    }
 
@@ -169,23 +207,23 @@ List ds_list_prepend_val(List l, int data)
 {
 	if (!l)
 	{
-		DS_LIB_ERR("ds_list_prepend: supplied argument 1 is not a valid List!");
+		DS_LIB_ERR("ds_list_prepend_val: supplied argument 1 is not a valid List!");
 		return NULL;
 	}
 
-   void *_data = malloc(sizeof(int));
-   if (!_data)
+   void *p_data = malloc(sizeof(int));
+   if (!p_data)
    {
       DS_C_ERR(__func__);
       return l;
    }
 
-   *(int*)_data = (int)data;
+   *(int*)p_data = (int)data;
 
-   LNode ln = _ds_list_node_new(_data);
+   LNode ln = _ds_list_node_new(p_data);
    if (!ln)
    {
-      DS_LIB_ERR("ds_list_prepend: failed to create new list node!");
+      DS_LIB_ERR("ds_list_prepend_val: failed to create new list node!");
       return l;
    }
 
@@ -242,6 +280,56 @@ List ds_list_insert_pos(List l, void *data, int pos)
    return l;
 }
 
+List ds_list_insert_pos_val(List l, int data, int pos)
+{
+   LNode dest, tmp;
+   int _pos;
+
+   if (!l)
+   {
+       DS_LIB_ERR("ds_list_insert_pos_val: supplied argument 1 is not a valid List!");
+       return NULL;
+   }
+
+   void *p_data = malloc(sizeof(int));
+   if (!p_data)
+   {
+      DS_C_ERR(__func__);
+      return l;
+   }
+
+   *(int*)p_data = data;
+
+   tmp = _ds_list_node_new(p_data);
+   if (!tmp)
+   {
+      DS_C_ERR(__func__);
+      return l;
+   }
+
+   if (!pos)
+   {
+      tmp->next = l->head;
+      l->head = tmp;
+
+      return l;
+   }
+   else
+   {
+      for (dest = l->head, _pos = 1; dest != NULL; dest = dest->next)
+      {
+         if (_pos++ == pos)
+         {
+            tmp->next = dest->next;
+            dest->next = tmp;
+            break;
+         }
+      }
+   }
+
+   return l;
+}
+
 List ds_list_delete_pos(List l, void **data, int pos)
 {
    LNode prev, tmp;
@@ -255,7 +343,7 @@ List ds_list_delete_pos(List l, void **data, int pos)
 
 	if (!data)
 	{
-		DS_LIB_ERR("ds_list_delete_pos: no variabe to save data from node to be deleted!");
+		DS_LIB_ERR("ds_lis_delete_pos: no variabe to save data from node to be deleted!");
 		return l;
 	}
 
@@ -281,6 +369,68 @@ List ds_list_delete_pos(List l, void **data, int pos)
          }
       }
    }
+
+   return l;
+}
+
+List ds_list_delete_pos_val(List l, int *data, int pos)
+{
+   LNode prev, tmp;
+   int _pos;
+
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_delete_pos_val: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+	if (!data)
+	{
+		DS_LIB_ERR("ds_lis_delete_pos_val: no variabe to save data from node to be deleted!");
+		return l;
+	}
+
+   if (!pos)
+   {
+      tmp = l->head;
+      l->head = tmp->next;
+      *data = *(int*)tmp->data;
+      free(tmp->data);
+      free(tmp);
+      return l;
+   }
+   else
+   {
+      for (prev = l->head, _pos = 1; prev->next != NULL; prev = prev->next)
+      {
+         if (_pos++ == pos)
+         {
+            tmp = prev->next;
+            prev->next = tmp->next;
+            *data = *(int*)tmp->data;
+	    free(tmp->data);
+            free(tmp);
+            break;
+         }
+      }
+   }
+
+   return l;
+}
+
+List ds_list_free_pos(List l, int pos)
+{
+   void *data;
+
+   if (!l)
+   {
+      DS_LIB_ERR("ds_list_free_pos: supplied argument 1 is not a valid List!");
+      return NULL;
+   }
+
+   ds_list_delete_pos(l, &data, pos);
+
+   free(data);
 
    return l;
 }
@@ -315,6 +465,30 @@ LNode ds_list_search(List l, void *data, int *pos)
    return NULL;
 }
 
+LNode ds_list_search_val(List l, int data, int *pos)
+{
+   LNode dest;
+   int _pos;
+
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_search: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+   for (dest = l->head, _pos = 0; dest != NULL; dest = dest->next, _pos++)
+   {
+      if (*(int*)dest->data == data)
+      {
+         *pos = _pos;
+         return dest;
+      }
+   }
+
+   *pos = -1;
+   return NULL;
+}
+
 List ds_list_update_pos(List l, void *data_new, void **data_old, int pos)
 {
 	LNode dest;
@@ -329,13 +503,13 @@ List ds_list_update_pos(List l, void *data_new, void **data_old, int pos)
 	if (!data_old)
 	{
 		DS_LIB_ERR("ds_list_update_pos: no variable to save data from updated node!");
-		return NULL;
+		return l;
 	}
 
 	if (!data_new)
 	{
 		DS_LIB_ERR("ds_list_update_pos: no data to update!");
-		return NULL;
+		return l;
 	}
 
    for (dest = l->head, _pos = 0; dest != NULL; dest = dest->next, _pos++)
@@ -344,6 +518,36 @@ List ds_list_update_pos(List l, void *data_new, void **data_old, int pos)
       {
         *data_old= dest->data;
 	dest->data = data_new;
+	break;
+      }
+   }
+
+	return l;
+}
+
+List ds_list_update_pos_val(List l, int data_new, int *data_old, int pos)
+{
+	LNode dest;
+	int _pos;
+
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_update_pos_val: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+	if (!data_old)
+	{
+		DS_LIB_ERR("ds_list_update_pos_val: no variable to save data from updated node!");
+		return l;
+	}
+
+   for (dest = l->head, _pos = 0; dest != NULL; dest = dest->next, _pos++)
+   {
+      if (_pos == pos)
+      {
+        *data_old= *(int*)dest->data;
+	*(int*)dest->data = data_new;
 	break;
       }
    }
