@@ -10,6 +10,7 @@
  * improve error handling macros
  * make fucntions static
  * optimize design
+ * implement memory clean up code
  */
 
 #include <list.h>
@@ -44,14 +45,19 @@ List ds_list_new(void *data)
 		return NULL;
 	}
 
-	l->head = _ds_list_node_new(data);
-	if (!l->head)
-	{
-		DS_LIB_ERR("ds_list_new: failed to create new list node!");
-		free(l);
-		return NULL;
+	if (data)
+   {
+      l->head = _ds_list_node_new(data);
+	   if (!l->head)
+	   {
+		   DS_LIB_ERR("ds_list_new: failed to create new list node!");
+		   free(l);
+		   return NULL;
 		
-	}
+	   }
+   }
+   else
+      l->head = NULL;
 
    l->tail = l->head;
 
@@ -79,8 +85,13 @@ List ds_list_append(List l, void *data)
       return l;
    }
 
-   l->tail->next = ln;
-   l->tail = ln;
+   if (l->head == NULL)
+      l->head = ln;
+   else
+   {
+      l->tail->next = ln;
+      l->tail = ln;
+   }
 
 	return l;
 }
@@ -276,7 +287,7 @@ int ds_list_count(List l)
 	if (!l)
 	{
 		DS_LIB_ERR("ds_list_update_pos: supplied argument 1 is not a valid List!");
-		return NULL;
+		return -1;
 	}
 
 	for (tmp = l->head, cnt = 0; tmp != NULL; tmp = tmp->next, cnt++);
