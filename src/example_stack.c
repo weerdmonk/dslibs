@@ -12,24 +12,24 @@ int main(void)
 {
 	Stack st = ds_stack_new(5);
         printf("stack occupancy = %d\n", st->top - st->sptr);
-        ds_stack_push(st, 10);
+        ds_stack_push_val(st, 10);
         printf("stack occupancy = %d\n", st->top - st->sptr);
-        ds_stack_push(st, 10);
+        ds_stack_push_val(st, 20);
         printf("stack occupancy = %d\n", st->top - st->sptr);
-        ds_stack_push(st, 10);
+        ds_stack_push_val(st, 30);
         printf("stack occupancy = %d\n", st->top - st->sptr);
-        ds_stack_push(st, 10);
+        ds_stack_push_val(st, 40);
         printf("stack occupancy = %d\n", st->top - st->sptr);
-        ds_stack_push(st, 10);
+        ds_stack_push_val(st, 50);
         printf("stack occupancy = %d\n", st->top - st->sptr);
-        ds_stack_push(st, 10);
+        ds_stack_push_val(st, 60);
         printf("stack occupancy = %d\n", st->top - st->sptr);
-        printf("popped data = %d\n", (int)ds_stack_pop(st));
-        printf("popped data = %d\n", (int)ds_stack_pop(st));
-        printf("popped data = %d\n", (int)ds_stack_pop(st));
-        printf("popped data = %d\n", (int)ds_stack_pop(st));
-        printf("popped data = %d\n", (int)ds_stack_pop(st));
-        printf("popped data = %d\n", (int)ds_stack_pop(st));
+        printf("popped data = %u\n", ds_stack_pop_val(st));
+        printf("popped data = %u\n", ds_stack_pop_val(st));
+        printf("popped data = %u\n", ds_stack_pop_val(st));
+        printf("popped data = %u\n", ds_stack_pop_val(st));
+        printf("popped data = %u\n", ds_stack_pop_val(st));
+        printf("popped data = %u\n", ds_stack_pop_val(st));
 
         return 0;
 }

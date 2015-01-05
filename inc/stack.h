@@ -36,6 +36,10 @@ Stack ds_stack_new(size_t capacity);
 
 Stack ds_stack_push(Stack s, void *data);
 
+Stack ds_stack_push_val(Stack s, unsigned int data);
+
 void *ds_stack_pop(Stack s);
+
+unsigned int ds_stack_pop_val(Stack s);
 
 #endif /* STACK_H */

@@ -9,3 +9,6 @@ tags
 
 # ignore cmake build directory
 build
+
+# ignore gcc output file
+a.out

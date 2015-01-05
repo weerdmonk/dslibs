@@ -70,22 +70,71 @@ Stack ds_stack_push(Stack s, void *data)
 	return s;
 }
 
+Stack ds_stack_push_val(Stack s, unsigned int data)
+{
+	if (!s)
+	{
+		DS_LIB_ERR("ds_stack_push_val: supplied argument 1 is not a valid Stack!");
+		return NULL;
+	}
+
+	if (s->is_full)
+	{
+		DS_LIB_INFO("ds_stack_push: Stack is full already!");
+		return s;
+	}
+
+	void *p_data = malloc(sizeof(int));
+	if (!p_data)
+	{
+		DS_C_ERR(__func__);
+		return s;
+	}
+
+	*(int*)p_data = data;
+	*(++s->top) = p_data;
+
+	_ds_stack_full_check(s);
+	
+	return s;
+}
+
 void *ds_stack_pop(Stack s)
 {
 	if (!s)
 	{
-		DS_LIB_ERR("ds_stack_push: supplied argument 1 is not a valid Stack!");
+		DS_LIB_ERR("ds_stack_pop: supplied argument 1 is not a valid Stack!");
 		return NULL;
 	}
 
 	if (s->top == s->sptr)
 	{
-		DS_LIB_INFO("ds_stack_push: Stack is empty!");
+		DS_LIB_INFO("ds_stack_pop: Stack is empty!");
 		return NULL;
 	}
 
-	void *tmp = *(s->top--);
+	void *p_data = *(s->top--);
 
-	return tmp;
+	return p_data;
 }
 
+unsigned int ds_stack_pop_val(Stack s)
+{
+	unsigned int data;
+
+	if (!s)
+	{
+		DS_LIB_ERR("ds_stack_pop_val: supplied argument 1 is not a valid Stack!");
+		return 0xFFFFFFFF;
+	}
+
+	if (s->top == s->sptr)
+	{
+		DS_LIB_INFO("ds_stack_pop_val: Stack is empty!");
+		return 0xFFFFFFFF;
+	}
+
+   data = *(unsigned int*)(*s->top--);
+
+	return data;
+}
