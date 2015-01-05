@@ -39,29 +39,29 @@ void ds_list_free(List *p_l);
 
 List ds_list_append(List l, void *data);
 
-List ds_list_append_val(List l, int data);
+List ds_list_append_val(List l, unsigned int data);
 
 List ds_list_prepend(List l, void *data);
 
-List ds_list_prepend_val(List l, int data);
+List ds_list_prepend_val(List l, unsigned int data);
 
 List ds_list_insert_pos(List l, void *data, int pos);
 
-List ds_list_insert_pos_val(List l, int data, int pos);
+List ds_list_insert_pos_val(List l, unsigned int data, int pos);
 
 List ds_list_delete_pos(List l, void **data, int pos);
 
-List ds_list_delete_pos_val(List l, int *data, int pos);
+List ds_list_delete_pos_val(List l, unsigned int *data, int pos);
 
 List ds_list_free_pos(List l, int pos);
 
 LNode ds_list_search(List l, void *data, int *pos);
 
-LNode ds_list_search_val(List l, int data, int *pos);
+LNode ds_list_search_val(List l, unsigned int data, int *pos);
 
 List ds_list_update_pos(List l, void *data_new, void **data_old, int pos);
 
-List ds_list_update_pos_val(List l, int data_new, int *data_old, int pos);
+List ds_list_update_pos_val(List l, unsigned int data_new, unsigned int *data_old, int pos);
 
 int ds_list_count(List l);
 

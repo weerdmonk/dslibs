@@ -137,7 +137,7 @@ List ds_list_append(List l, void *data)
 	return l;
 }
 
-List ds_list_append_val(List l, int data)
+List ds_list_append_val(List l, unsigned int data)
 {
 	if (!l)
 	{
@@ -203,7 +203,7 @@ List ds_list_prepend(List l, void *data)
 	return l;
 }
 
-List ds_list_prepend_val(List l, int data)
+List ds_list_prepend_val(List l, unsigned int data)
 {
 	if (!l)
 	{
@@ -280,7 +280,7 @@ List ds_list_insert_pos(List l, void *data, int pos)
    return l;
 }
 
-List ds_list_insert_pos_val(List l, int data, int pos)
+List ds_list_insert_pos_val(List l, unsigned int data, int pos)
 {
    LNode dest, tmp;
    int _pos;
@@ -373,7 +373,7 @@ List ds_list_delete_pos(List l, void **data, int pos)
    return l;
 }
 
-List ds_list_delete_pos_val(List l, int *data, int pos)
+List ds_list_delete_pos_val(List l, unsigned int *data, int pos)
 {
    LNode prev, tmp;
    int _pos;
@@ -446,26 +446,20 @@ LNode ds_list_search(List l, void *data, int *pos)
 		return NULL;
 	}
 
-	if (!data)
-	{
-		DS_LIB_ERR("ds_list_search: no data to search for!");
-		return NULL;
-	}
-
    for (dest = l->head, _pos = 0; dest != NULL; dest = dest->next, _pos++)
    {
       if (dest->data == data)
       {
-         *pos = _pos;
+         if (pos) *pos = _pos;
          return dest;
       }
    }
 
-   *pos = -1;
+   if (pos) *pos = -1;
    return NULL;
 }
 
-LNode ds_list_search_val(List l, int data, int *pos)
+LNode ds_list_search_val(List l, unsigned int data, int *pos)
 {
    LNode dest;
    int _pos;
@@ -480,12 +474,12 @@ LNode ds_list_search_val(List l, int data, int *pos)
    {
       if (*(int*)dest->data == data)
       {
-         *pos = _pos;
+         if (pos) *pos = _pos;
          return dest;
       }
    }
 
-   *pos = -1;
+   if (pos) *pos = -1;
    return NULL;
 }
 
@@ -525,7 +519,7 @@ List ds_list_update_pos(List l, void *data_new, void **data_old, int pos)
 	return l;
 }
 
-List ds_list_update_pos_val(List l, int data_new, int *data_old, int pos)
+List ds_list_update_pos_val(List l, unsigned int data_new, unsigned int *data_old, int pos)
 {
 	LNode dest;
 	int _pos;
