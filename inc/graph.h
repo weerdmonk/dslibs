@@ -10,6 +10,7 @@
 #define GRAPH_H
 
 #include <stdlib.h>
+#include <stack.h>
 #include <list.h>
 #include <error.h>
 
@@ -27,5 +28,8 @@ Graph ds_graph_new(int v, unsigned char directed);
 
 Graph ds_graph_edge_add(Graph g, int src, int dest);
 
+Graph ds_graph_edge_del(Graph g, int src, int dest);
+
+Graph ds_graph_dfs(Graph g);
 
 #endif /* GRAPH_H */
