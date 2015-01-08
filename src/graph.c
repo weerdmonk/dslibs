@@ -92,7 +92,7 @@ Graph ds_graph_dfs(Graph g)
       return NULL;
    }
 
-   Stack open = ds_stack_new(25);
+   Stack open = ds_stack_new(g->v);
    if (!open) return g;
 
    List visited = ds_list_new(NULL);
@@ -126,6 +126,48 @@ Graph ds_graph_dfs(Graph g)
      {
         printf("dfs = %d\n", *(unsigned int*)ln->data);
      }
+
+   return g;
+}
+
+void dfs_recurse(Graph g, int v, unsigned char visited[])
+{
+   LNode tmp;
+
+   visited[v] = 1;
+   printf(" %d\n", v);
+
+   for(tmp = g->adjlist[v].head; tmp != NULL; tmp = tmp->next)
+   {
+      if (visited[*(unsigned int*)tmp->data] == 0)
+         dfs_recurse(g, *(unsigned int*)tmp->data, visited);
+   }
+
+}
+
+Graph ds_graph_dfs2(Graph g)
+{
+   int i = 0;
+
+   printf("dfs2\n");
+   if (!g)
+   {
+      DS_LIB_ERR("ds_graph_dfs2: supplied argument 1 is not a valid graph!");
+      return NULL;
+   }
+
+   unsigned char *visited = calloc(g->v, sizeof(unsigned char));
+   if (!visited)
+   {
+      DS_C_ERR(__func__);
+      return g;
+   }
+
+   for(; i < g->v; i++)
+   {
+      if (visited[i] == 0)
+         dfs_recurse(g, i, visited);
+   }
 
    return g;
 }
@@ -176,6 +218,7 @@ int main(void)
    }
 
    ds_graph_dfs(g);
+   ds_graph_dfs2(g);
 
    return 0;
 }
