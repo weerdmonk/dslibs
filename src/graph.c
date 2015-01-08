@@ -21,6 +21,8 @@
  */
 #include <graph.h>
 
+dfs_proc_func dee_foo;
+
 Graph ds_graph_new(int v, unsigned char directed)
 {
    if (v < 0)
@@ -82,30 +84,15 @@ Graph ds_graph_edge_add(Graph g, int src, int dest)
    return g;
 }
 
-Graph ds_graph_dfs(Graph g)
+static void dfs_iterate(Graph g, int v, List visited)
 {
-	int v = 0;
+   LNode tmp;
 
-   if (!g)
-   {
-      DS_LIB_ERR("ds_graph_dfs: supplied argument 1 is not a valid graph!");
-      return NULL;
-   }
-
+   // TODO: malloc fail should cause dfs to throw error. instead it continues which is OK for only connected graphs
    Stack open = ds_stack_new(g->v);
-   if (!open) return g;
+   if (!open) return;
 
-   List visited = ds_list_new(NULL);
-   if (!visited)
-   {
-      free(open->sptr);
-      free(open);
-      return NULL;
-   }
-
-   LNode tmp,ln;
-
-   ds_stack_push_val(open, 0);
+   ds_stack_push_val(open, v);
 
    while (open->top != open->sptr)
    {
@@ -113,7 +100,8 @@ Graph ds_graph_dfs(Graph g)
       if (!ds_list_search_val(visited, v, NULL))
         {
            ds_list_append_val(visited, v);
-           printf("visited vertex %d\n", v);
+           /* fucntion to process graph node */   // TODO: inclue function ptr and data ptr in dfs API
+           dee_foo(&v);
            for(tmp = g->adjlist[v].head; tmp != NULL; tmp = tmp->next)
            {
              ds_stack_push_val(open, *(int*)tmp->data);
@@ -122,10 +110,30 @@ Graph ds_graph_dfs(Graph g)
 
    }
 
-   for(ln=visited->head;ln!=NULL;ln=ln->next)
-     {
-        printf("dfs = %d\n", *(unsigned int*)ln->data);
-     }
+   free(open->sptr);
+   free(open);
+}
+
+Graph ds_graph_dfs(Graph g)
+{
+   int v = 0;
+
+   if (!g)
+   {
+      DS_LIB_ERR("ds_graph_dfs: supplied argument 1 is not a valid graph!");
+      return NULL;
+   }
+
+   List visited = ds_list_new(NULL);
+   if (!visited)
+   {
+      return NULL;
+   }
+
+   for(; v < g->v; v++)
+   {
+      dfs_iterate(g, v, visited);
+   }
 
    return g;
 }
@@ -135,7 +143,8 @@ void dfs_recurse(Graph g, int v, unsigned char visited[])
    LNode tmp;
 
    visited[v] = 1;
-   printf(" %d\n", v);
+   /* fucntion to process graph node */   // TODO: inclue function ptr and data ptr in dfs API
+   dee_foo(&v);
 
    for(tmp = g->adjlist[v].head; tmp != NULL; tmp = tmp->next)
    {
@@ -149,7 +158,6 @@ Graph ds_graph_dfs2(Graph g)
 {
    int i = 0;
 
-   printf("dfs2\n");
    if (!g)
    {
       DS_LIB_ERR("ds_graph_dfs2: supplied argument 1 is not a valid graph!");
@@ -170,55 +178,4 @@ Graph ds_graph_dfs2(Graph g)
    }
 
    return g;
-}
-
-// this code is to test graph only
-int main(void)
-{
-   LNode ln;
-   List l;
-   int i = 0;
-
-   Graph g = ds_graph_new(8, 1);
-
-//   ds_graph_edge_add(g, 0, 1);
-//   ds_graph_edge_add(g, 0, 7);
-//   ds_graph_edge_add(g, 0, 2);
-//   ds_graph_edge_add(g, 1, 4);
-//   ds_graph_edge_add(g, 1, 3);
-//   ds_graph_edge_add(g, 4, 6);
-//   ds_graph_edge_add(g, 6, 3);
-//   ds_graph_edge_add(g, 6, 5);
-//   ds_graph_edge_add(g, 3, 7);
-//   ds_graph_edge_add(g, 2, 3);
-//   ds_graph_edge_add(g, 5, 2);
-
-   ds_graph_edge_add(g, 0, 2);
-   ds_graph_edge_add(g, 0, 1);
-   ds_graph_edge_add(g, 1, 3);
-   ds_graph_edge_add(g, 1, 4);
-   ds_graph_edge_add(g, 3, 2);
-   ds_graph_edge_add(g, 2, 5);
-   ds_graph_edge_add(g, 3, 7);
-   ds_graph_edge_add(g, 4, 6);
-   ds_graph_edge_add(g, 5, 6);
-   ds_graph_edge_add(g, 6, 3);
-   ds_graph_edge_add(g, 7, 0);
-
-   printf("directeness of graph %u\n", g->directed);
-
-   for (l = &(g->adjlist[i]); i < 8; i++, l = &(g->adjlist[i]))
-   {
-      printf("printing for vertex %d\n", i);
-      for(ln=l->head;ln!=NULL;ln=ln->next)
-      {
-         printf("list node data = %d\n", *((int*)ln->data));
-      }
-      ln = NULL;
-   }
-
-   ds_graph_dfs(g);
-   ds_graph_dfs2(g);
-
-   return 0;
 }

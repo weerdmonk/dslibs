@@ -24,6 +24,8 @@ struct _Graph {
    List adjlist;
 };
 
+typedef int (*dfs_proc_func)(void *data);
+
 Graph ds_graph_new(int v, unsigned char directed);
 
 Graph ds_graph_edge_add(Graph g, int src, int dest);
