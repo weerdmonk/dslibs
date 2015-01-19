@@ -197,8 +197,17 @@ List ds_list_prepend(List l, void *data)
       return l;
    }
 
-   ln->next = l->head;
-   l->head = ln;
+   if (l->head == NULL)
+   {
+      l->head = ln;
+      l->tail = l->head;
+   }
+   else
+   {
+      ln->next = l->head;
+      l->head = ln;
+   }
+
 
 	return l;
 }
@@ -227,8 +236,16 @@ List ds_list_prepend_val(List l, unsigned int data)
       return l;
    }
 
-   ln->next = l->head;
-   l->head = ln;
+   if (l->head == NULL)
+   {
+      l->head = ln;
+      l->tail = l->head;
+   }
+   else
+   {
+      ln->next = l->head;
+      l->head = ln;
+   }
 
 	return l;
 }
