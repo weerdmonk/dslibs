@@ -89,7 +89,7 @@ void *ds_stack_pop(Stack s)
 		return s;
 	}
 
-   ds_list_delete_pos(s->l, &p_data, s->depth);
+   ds_list_delete_pos(s->l, &p_data, s->depth - 1);
    s->depth--;
 	_ds_stack_empty_check(s);
 
