@@ -12,27 +12,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <strings.h>
-
 #include <error.h>
+#include <list.h>
 
 #define DS_STACK_ALLOC_SIZE		sizeof(struct _Stack)
-#define DS_STACK_NODE_SIZE		sizeof(void*)
 
 typedef struct _Stack *Stack;
 
 struct _Stack {
-	size_t capacity;
-	unsigned char is_full;
-	void **sptr;
-	void **top;
+	List l;
+	LNode sptr;
+	LNode top;
+	unsigned char is_empty;
+   int depth;
 };
 
-static inline unsigned char _ds_stack_full_check(Stack s)
+static inline unsigned char _ds_stack_empty_check(Stack s)
 {
-	return (s->is_full = ((s->top - s->sptr) == s->capacity));
+	return (s->is_empty = (s->depth == 0));
 }
 
-Stack ds_stack_new(size_t capacity);
+Stack ds_stack_new(void);
 
 Stack ds_stack_push(Stack s, void *data);
 

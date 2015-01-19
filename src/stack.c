@@ -14,13 +14,8 @@
 
 #include <stack.h>
 
-Stack ds_stack_new(size_t capacity)
+Stack ds_stack_new(void)
 {
-	if (capacity < 0)
-	{
-		DS_LIB_ERR("ds_stack_new : capacity should be non-negative!");
-		return NULL;
-	}
 
 	Stack s = calloc(1, DS_STACK_ALLOC_SIZE);
 	if (!s)
@@ -29,18 +24,15 @@ Stack ds_stack_new(size_t capacity)
 		return NULL;
 	}
 
-	s->capacity = capacity;
-
-	s->sptr = calloc(s->capacity, DS_STACK_NODE_SIZE);
-	if (!s->sptr)
+   s->l = ds_list_new(NULL);
+	if (!s->l)
 	{
-		DS_C_ERR(__func__);
 		free(s);
 		return NULL;
 		
 	}
 
-	s->top = s->sptr;
+	s->top = s->sptr = s->l->head;
 }
 
 Stack ds_stack_push(Stack s, void *data)
@@ -57,16 +49,11 @@ Stack ds_stack_push(Stack s, void *data)
 		return s;
 	}
 
-	if (s->is_full)
-	{
-		DS_LIB_INFO("ds_stack_push: Stack is full already!");
-		return s;
-	}
+   s->depth++;
+   ds_list_append(s->l, data);
+	s->top = s->l->tail;
+   if (!s->sptr) s->sptr = s->l->head;
 
-	*(++s->top) = data;
-
-	_ds_stack_full_check(s);
-	
 	return s;
 }
 
@@ -78,42 +65,33 @@ Stack ds_stack_push_val(Stack s, unsigned int data)
 		return NULL;
 	}
 
-	if (s->is_full)
-	{
-		DS_LIB_INFO("ds_stack_push: Stack is full already!");
-		return s;
-	}
+   s->depth++;
+   ds_list_append_val(s->l, data);
+	s->top = s->l->tail;
+   if (!s->sptr) s->sptr = s->l->head;
 
-	void *p_data = malloc(sizeof(int));
-	if (!p_data)
-	{
-		DS_C_ERR(__func__);
-		return s;
-	}
-
-	*(int*)p_data = data;
-	*(++s->top) = p_data;
-
-	_ds_stack_full_check(s);
-	
 	return s;
 }
 
 void *ds_stack_pop(Stack s)
 {
+   void *p_data;
+
 	if (!s)
 	{
 		DS_LIB_ERR("ds_stack_pop: supplied argument 1 is not a valid Stack!");
 		return NULL;
 	}
 
-	if (s->top == s->sptr)
+	if (s->is_empty)
 	{
 		DS_LIB_INFO("ds_stack_pop: Stack is empty!");
-		return NULL;
+		return s;
 	}
 
-	void *p_data = *(s->top--);
+   ds_list_delete_pos(s->l, &p_data, s->depth);
+   s->depth--;
+	_ds_stack_empty_check(s);
 
 	return p_data;
 }
@@ -128,13 +106,15 @@ unsigned int ds_stack_pop_val(Stack s)
 		return 0xFFFFFFFF;
 	}
 
-	if (s->top == s->sptr)
+	if (s->is_empty)
 	{
 		DS_LIB_INFO("ds_stack_pop_val: Stack is empty!");
 		return 0xFFFFFFFF;
 	}
 
-   data = *(unsigned int*)(*s->top--);
+   ds_list_delete_pos_val(s->l, &data, s->depth - 1);
+   s->depth--;
+   _ds_stack_empty_check(s);
 
 	return data;
 }
