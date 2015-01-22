@@ -15,11 +15,14 @@
 #define DS_LIST_ALLOC_SIZE		sizeof(struct _List)
 #define DS_LIST_NODE_SIZE		sizeof(struct _LNode)
 
+// FIXME move structure declarations to source file. header will be exported.
+
 typedef struct _LNode *LNode;
 
 struct _LNode {
    void *data;
    struct _LNode *next;
+   struct _LNode *prev;
 };
 
 typedef struct _List *List;
