@@ -89,8 +89,10 @@ void *ds_stack_pop(Stack s)
 		return s;
 	}
 
+   //FIXME new list API to delete specific node or delete node from within stack function
    ds_list_delete_pos(s->l, &p_data, s->depth - 1);
    s->depth--;
+   s->top = s->l->tail;
 	_ds_stack_empty_check(s);
 
 	return p_data;
@@ -112,8 +114,10 @@ unsigned int ds_stack_pop_val(Stack s)
 		return 0xFFFFFFFF;
 	}
 
+   //FIXME new list API to delete specific node or delete node from within stack function
    ds_list_delete_pos_val(s->l, &data, s->depth - 1);
    s->depth--;
+   s->top = s->l->tail;
    _ds_stack_empty_check(s);
 
 	return data;
