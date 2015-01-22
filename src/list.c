@@ -425,7 +425,9 @@ List ds_list_delete_pos_val(List l, unsigned int *data, int pos)
             tmp = prev->next;
             prev->next = tmp->next;
             *data = *(int*)tmp->data;
-	    free(tmp->data);
+            // FIXME in case pos is equal to count of nodes handle it elegantly
+            if (tmp == l->tail) l->tail = prev;
+            free(tmp->data);
             free(tmp);
             break;
          }
