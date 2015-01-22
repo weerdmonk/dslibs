@@ -89,12 +89,12 @@ static void dfs_iterate(Graph g, int v, List visited)
    LNode tmp;
 
    // TODO: malloc fail should cause dfs to throw error. instead it continues which is OK for only connected graphs
-   Stack open = ds_stack_new(g->v);
+   Stack open = ds_stack_new();
    if (!open) return;
 
    ds_stack_push_val(open, v);
 
-   while (open->top != open->sptr)
+   while (!_ds_stack_empty_check(open))
    {
       v = ds_stack_pop_val(open);
       if (!ds_list_search_val(visited, v, NULL))
@@ -110,7 +110,7 @@ static void dfs_iterate(Graph g, int v, List visited)
 
    }
 
-   free(open->sptr);
+   ds_list_free(&open->l);
    free(open);
 }
 
@@ -127,13 +127,15 @@ Graph ds_graph_dfs(Graph g)
    List visited = ds_list_new(NULL);
    if (!visited)
    {
-      return NULL;
+      return g;
    }
 
    for(; v < g->v; v++)
    {
       dfs_iterate(g, v, visited);
    }
+
+   ds_list_free(&visited);
 
    return g;
 }
@@ -177,5 +179,61 @@ Graph ds_graph_dfs2(Graph g)
          dfs_recurse(g, i, visited);
    }
 
+   free(visited);
+
    return g;
 }
+
+Graph ds_graph_bfs(Graph g)
+{
+   int v = 0;
+   LNode tmp;
+
+   if (!g)
+   {
+      DS_LIB_ERR("ds_graph_dfs2: supplied argument 1 is not a valid graph!");
+      return NULL;
+   }
+
+   // list of visited vertices
+   List visited = ds_list_new(NULL);
+   if (!visited)
+   {
+      return g;
+   }
+
+   // queue to be used for traversal
+   Queue open = ds_queue_new();
+   if (!open)
+   {
+      return g;
+   }
+
+   // let us start with bfs from vertex 0 only
+   ds_list_append_val(visited, 0);
+
+   ds_queue_enque_val(open, 0);
+
+   while (!_ds_queue_empty_check(open))
+   {
+      v = ds_queue_deque_val(open);
+      /* add processor function here */
+      printf("visited vertex %d\n", v);
+      for(tmp = g->adjlist[v].head; tmp != NULL; tmp = tmp->next)
+      {
+         if (!ds_list_search_val(visited, *(int*)tmp->data, NULL))
+         {
+            ds_list_append_val(visited, *(int*)tmp->data);
+            ds_queue_enque_val(open, *(int*)tmp->data);
+         }
+      }
+   }
+
+   ds_list_free(&open->l);
+   free(open);
+
+   ds_list_free(&visited);
+
+   return g;
+}
+

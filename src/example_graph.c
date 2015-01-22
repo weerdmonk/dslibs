@@ -40,7 +40,7 @@ int main(void)
    List l;
    int i = 0;
 
-   Graph g = ds_graph_new(8, 1);
+   Graph g = ds_graph_new(8, 0);
 
 //   ds_graph_edge_add(g, 0, 1);
 //   ds_graph_edge_add(g, 0, 7);
@@ -85,6 +85,9 @@ int main(void)
 
    printf("dfs2\n");
    ds_graph_dfs2(g);
+
+   printf("bfs\n");
+   ds_graph_bfs(g);
 
    return 0;
 }

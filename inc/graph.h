@@ -11,6 +11,7 @@
 
 #include <stdlib.h>
 #include <stack.h>
+#include <queue.h>
 #include <list.h>
 #include <error.h>
 
@@ -35,5 +36,7 @@ Graph ds_graph_edge_del(Graph g, int src, int dest);
 Graph ds_graph_dfs(Graph g);
 
 Graph ds_grpah_dfs2(Graph g);
+
+Graph ds_graph_bfs(Graph g);
 
 #endif /* GRAPH_H */
