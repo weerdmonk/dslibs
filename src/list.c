@@ -487,9 +487,12 @@ List ds_list_delete_start(List l, void **data)
    }
 
    tmp = l->head;
-   l->head = tmp->next;
-   if (tmp == l->tail) l->tail = l->head;
    *data = tmp->data;
+   l->head = tmp->next;
+   if (tmp == l->tail)
+      l->tail = l->head;
+   else
+      l->head->prev = tmp->prev;
    free(tmp);
 
    return l;
@@ -512,9 +515,12 @@ List ds_list_delete_start_val(List l, unsigned int *data)
    }
 
    tmp = l->head;
-   l->head = tmp->next;
    *data = *(int*)tmp->data;
-   if (tmp == l->tail) l->tail = l->head;
+   l->head = tmp->next;
+   if (tmp == l->tail)
+      l->tail = l->head;
+   else
+      l->head->prev = tmp->prev;
    free(tmp->data);
    free(tmp);
 
