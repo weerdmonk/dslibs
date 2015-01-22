@@ -53,6 +53,14 @@ List ds_list_delete_pos(List l, void **data, int pos);
 
 List ds_list_delete_pos_val(List l, unsigned int *data, int pos);
 
+List ds_list_delete_start(List l, void **data);
+
+List ds_list_delete_start_val(List l, unsigned int *data);
+
+List ds_list_delete_end(List l, void **data);
+
+List ds_list_delete_end_val(List l, unsigned int *data);
+
 List ds_list_free_pos(List l, int pos);
 
 LNode ds_list_search(List l, void *data, int *pos);

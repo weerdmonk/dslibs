@@ -157,6 +157,7 @@ List ds_list_append_val(List l, unsigned int data)
    LNode ln = _ds_list_node_new(p_data);
    if (!ln)
    {
+      free(p_data);
 		DS_LIB_ERR("ds_list_append_val: failed to create new list node!");
       return l;
    }
@@ -277,6 +278,7 @@ List ds_list_insert_pos(List l, void *data, int pos)
    if (!pos)
    {
       tmp->next = l->head;
+      if (l->head == NULL) l->tail = tmp;
       l->head = tmp;
 
       return l;
@@ -289,6 +291,7 @@ List ds_list_insert_pos(List l, void *data, int pos)
          {
             tmp->next = dest->next;
             dest->next = tmp;
+            if (dest == l->tail) l->tail = tmp;
             break;
          }
       }
@@ -327,6 +330,7 @@ List ds_list_insert_pos_val(List l, unsigned int data, int pos)
    if (!pos)
    {
       tmp->next = l->head;
+      if (l->head == NULL) l->tail = tmp;
       l->head = tmp;
 
       return l;
@@ -339,6 +343,7 @@ List ds_list_insert_pos_val(List l, unsigned int data, int pos)
          {
             tmp->next = dest->next;
             dest->next = tmp;
+            if (dest == l->tail) l->tail = tmp;
             break;
          }
       }
@@ -369,6 +374,7 @@ List ds_list_delete_pos(List l, void **data, int pos)
       tmp = l->head;
       l->head = tmp->next;
       *data = tmp->data;
+      if (tmp == l->tail) l->tail = l->head;
       free(tmp);
       return l;
    }
@@ -381,6 +387,7 @@ List ds_list_delete_pos(List l, void **data, int pos)
             tmp = prev->next;
             prev->next = tmp->next;
             *data = tmp->data;
+            if (tmp == l->tail) l->tail = prev;
             free(tmp);
             break;
          }
@@ -412,6 +419,7 @@ List ds_list_delete_pos_val(List l, unsigned int *data, int pos)
       tmp = l->head;
       l->head = tmp->next;
       *data = *(int*)tmp->data;
+      if (tmp == l->tail) l->tail = l->head;
       free(tmp->data);
       free(tmp);
       return l;
@@ -433,6 +441,133 @@ List ds_list_delete_pos_val(List l, unsigned int *data, int pos)
          }
       }
    }
+
+   return l;
+}
+
+List ds_list_delete_start(List l, void **data)
+{
+   LNode tmp;
+
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_delete_start: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+	if (!data)
+	{
+		DS_LIB_ERR("ds_lis_delete_start: no variabe to save data from node to be deleted!");
+		return l;
+	}
+
+   tmp = l->head;
+   l->head = tmp->next;
+   if (tmp == l->tail) l->tail = l->head;
+   *data = tmp->data;
+   free(tmp);
+
+   return l;
+}
+
+List ds_list_delete_start_val(List l, unsigned int *data)
+{
+   LNode tmp;
+
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_delete_start: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+	if (!data)
+	{
+		DS_LIB_ERR("ds_lis_delete_start: no variabe to save data from node to be deleted!");
+		return l;
+	}
+
+   tmp = l->head;
+   l->head = tmp->next;
+   *data = *(int*)tmp->data;
+   if (tmp == l->tail) l->tail = l->head;
+   free(tmp->data);
+   free(tmp);
+
+   return l;
+}
+
+List ds_list_delete_end(List l, void **data)
+{
+   LNode prev, tmp;
+
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_delete_start: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+	if (!data)
+	{
+		DS_LIB_ERR("ds_lis_delete_start: no variabe to save data from node to be deleted!");
+		return l;
+	}
+
+   for (prev = l->head; prev->next != NULL; prev = prev->next)
+   {
+      if (prev->next == l->tail)
+      {
+         tmp = prev->next;
+         prev->next = tmp->next;
+         l->tail = prev;
+         *data = tmp->data;
+         free(tmp);
+         return l;
+      }
+   }
+
+   l->tail = prev->next;
+   l->head = l->tail;
+   *data = prev->data;
+   free(prev);
+
+   return l;
+}
+
+List ds_list_delete_end_val(List l, unsigned int *data)
+{
+   LNode prev, tmp;
+
+	if (!l)
+	{
+		DS_LIB_ERR("ds_list_delete_start: supplied argument 1 is not a valid List!");
+		return NULL;
+	}
+
+	if (!data)
+	{
+		DS_LIB_ERR("ds_lis_delete_start: no variabe to save data from node to be deleted!");
+		return l;
+	}
+
+   for (prev = l->head; prev->next != NULL; prev = prev->next)
+   {
+      if (prev->next == l->tail)
+      {
+         tmp = prev->next;
+         prev->next = tmp->next;
+         l->tail = prev;
+         *data = *(int*)tmp->data;
+         free(tmp->data);
+         free(tmp);
+         return l;
+      }
+   }
+
+   l->tail = prev->next;
+   l->head = l->tail;
+   *data = *(int*)prev->data;
+   free(prev->data);
+   free(prev);
 
    return l;
 }
