@@ -12,3 +12,7 @@ build
 
 # ignore gcc output file
 a.out
+
+# ignore cmake output directories
+bin
+lib
