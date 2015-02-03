@@ -21,10 +21,7 @@
  */
 #include <graph.h>
 
-// function to process graph nodes
-extern dfs_proc_func dee_foo;
-
-// printf graph nodes
+// fucntion to print graph nodes
 int dfs_print(void *data)
 {
    int *p_v = data;
@@ -41,6 +38,8 @@ int main(void)
    int i = 0;
 
    Graph g = ds_graph_new(8, 0);
+
+   ds_graph_proc_func_add(g, dfs_print);
 
 //   ds_graph_edge_add(g, 0, 1);
 //   ds_graph_edge_add(g, 0, 7);
@@ -77,8 +76,6 @@ int main(void)
       }
       ln = NULL;
    }
-
-   dee_foo = dfs_print;
 
    printf("dfs\n");
    ds_graph_dfs(g);

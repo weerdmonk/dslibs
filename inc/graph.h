@@ -19,13 +19,14 @@
 
 typedef struct _Graph *Graph;
 
+typedef int (*ds_graph_proc_func)(void *data);
+
 struct _Graph {
    int v;
    unsigned char directed;
    List adjlist;
+   ds_graph_proc_func dee_foo;
 };
-
-typedef int (*dfs_proc_func)(void *data);
 
 Graph ds_graph_new(int v, unsigned char directed);
 
@@ -38,5 +39,25 @@ Graph ds_graph_dfs(Graph g);
 Graph ds_grpah_dfs2(Graph g);
 
 Graph ds_graph_bfs(Graph g);
+
+static inline void ds_graph_proc_func_add(Graph g, ds_graph_proc_func func)
+{
+   if (!g || !func)
+      return;
+   else
+      g->dee_foo = func;
+
+   return;
+}
+
+static inline void ds_graph_proc_func_del(Graph g)
+{
+   if (!g || !g->dee_foo)
+      return;
+   else
+      g->dee_foo = NULL;
+
+   return;
+}
 
 #endif /* GRAPH_H */

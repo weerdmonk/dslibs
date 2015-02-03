@@ -21,8 +21,6 @@
  */
 #include <graph.h>
 
-dfs_proc_func dee_foo;
-
 Graph ds_graph_new(int v, unsigned char directed)
 {
    if (v < 0)
@@ -101,7 +99,7 @@ static void dfs_iterate(Graph g, int v, List visited)
         {
            ds_list_append_val(visited, v);
            /* fucntion to process graph node */   // TODO: inclue function ptr and data ptr in dfs API
-           dee_foo(&v);
+           if (g->dee_foo) g->dee_foo(&v);
            for(tmp = g->adjlist[v].head; tmp != NULL; tmp = tmp->next)
            {
              ds_stack_push_val(open, *(int*)tmp->data);
@@ -146,7 +144,7 @@ void dfs_recurse(Graph g, int v, unsigned char visited[])
 
    visited[v] = 1;
    /* fucntion to process graph node */   // TODO: inclue function ptr and data ptr in dfs API
-   dee_foo(&v);
+   if(g->dee_foo) g->dee_foo(&v);
 
    for(tmp = g->adjlist[v].head; tmp != NULL; tmp = tmp->next)
    {
@@ -236,4 +234,3 @@ Graph ds_graph_bfs(Graph g)
 
    return g;
 }
-
