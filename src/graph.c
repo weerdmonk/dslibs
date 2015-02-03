@@ -216,7 +216,7 @@ Graph ds_graph_bfs(Graph g)
    {
       v = ds_queue_deque_val(open);
       /* add processor function here */
-      printf("visited vertex %d\n", v);
+      if (g->dee_foo) g->dee_foo(&v);
       for(tmp = g->adjlist[v].head; tmp != NULL; tmp = tmp->next)
       {
          if (!ds_list_search_val(visited, *(int*)tmp->data, NULL))
