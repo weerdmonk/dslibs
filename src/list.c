@@ -300,7 +300,7 @@ List ds_list_insert_pos(List l, void *data, int pos)
             tmp->prev = dest;
             if (dest == l->tail)
                l->tail = tmp;
-            else
+            else if (tmp->next)
                tmp->next->prev = tmp;
             break;
          }
@@ -359,7 +359,7 @@ List ds_list_insert_pos_val(List l, unsigned int data, int pos)
             tmp->prev = dest;
             if (dest == l->tail)
                l->tail = tmp;
-            else
+            else if (tmp->next)
                tmp->next->prev = tmp;
             break;
          }
@@ -391,7 +391,7 @@ List ds_list_delete_pos(List l, void **data, int pos)
       tmp = l->head;
       *data = tmp->data;
       l->head = tmp->next;
-      l->head->prev = tmp->prev;
+      if (l->head) l->head->prev = tmp->prev;
       if (tmp == l->tail) l->tail = l->head;
       free(tmp);
       return l;
@@ -407,7 +407,7 @@ List ds_list_delete_pos(List l, void **data, int pos)
             dest->next = tmp->next;
             if (tmp == l->tail)
                l->tail = dest;
-            else
+            else if (dest->next)
                dest->next->prev = dest;
             free(tmp);
             break;
@@ -440,7 +440,7 @@ List ds_list_delete_pos_val(List l, unsigned int *data, int pos)
       tmp = l->head;
       *data = *(int*)tmp->data;
       l->head = tmp->next;
-      l->head->prev = tmp->prev;
+      if (l->head) l->head->prev = tmp->prev;
       if (tmp == l->tail) l->tail = l->head;
       free(tmp->data);
       free(tmp);
@@ -458,7 +458,7 @@ List ds_list_delete_pos_val(List l, unsigned int *data, int pos)
             // FIXME in case pos is equal to count of nodes handle it elegantly
             if (tmp == l->tail)
                l->tail = dest;
-            else
+            else if (dest->next)
                dest->next->prev = dest;
             free(tmp->data);
             free(tmp);
@@ -519,7 +519,7 @@ List ds_list_delete_start_val(List l, unsigned int *data)
    l->head = tmp->next;
    if (tmp == l->tail)
       l->tail = l->head;
-   else
+   else if (l->head)
       l->head->prev = tmp->prev;
    free(tmp->data);
    free(tmp);
