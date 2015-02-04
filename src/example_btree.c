@@ -53,5 +53,8 @@ int main(void)
    printf("inorder\n");
    ds_btree_inorder(bt);
 
+   printf("levelorder\n");
+   ds_btree_levelorder(bt);
+
    return 0;
 }

@@ -64,4 +64,6 @@ BTree ds_btree_leaf_remove(BTree tree, int data);
 
 BTree ds_btree_inorder(BTree tree);
 
+BTree ds_btree_levelorder(BTree tree);
+
 #endif /* BTREE_H */

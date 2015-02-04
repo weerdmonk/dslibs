@@ -112,7 +112,34 @@ BTree ds_btree_inorder(BTree tree)
    return tree;
 }
 
+static void _ds_btree_print_level(BLeaf leaf, int level)
+{
+   if (leaf == NULL) return;
+   if (level == 0) printf("%d ", leaf->key);
+   else
+   {
+      _ds_btree_print_level(leaf->left, level - 1);
+      _ds_btree_print_level(leaf->right, level - 1);
+   }
 
+}
+
+BTree ds_btree_levelorder(BTree tree)
+{
+   if (!tree)
+   {
+      DS_LIB_ERR("ds_btree_levelorder: supplied argument is not a valid BTree!");
+      return NULL;
+   }
+
+   int i;
+
+   for (i = 0; i <= tree->depth; i++)
+   {
+      _ds_btree_print_level(tree->root, i);
+      printf("\n");
+   }
+}
 
 
 
