@@ -43,6 +43,7 @@ BTree ds_btree_leaf_insert(BTree tree, int data)
    }
 
    BLeaf *p_crawl = &tree->root;
+   int _depth = 0;
 
    while (*p_crawl != NULL)
    {
@@ -52,6 +53,8 @@ BTree ds_btree_leaf_insert(BTree tree, int data)
         p_crawl = &((*p_crawl)->right);
       else
         return tree;
+
+      _depth++;
    }
 
    *p_crawl = calloc(1, DS_BTREE_NODE_SIZE);
@@ -60,6 +63,7 @@ BTree ds_btree_leaf_insert(BTree tree, int data)
       (*p_crawl)->key = data;
    }
 
+   tree->depth = (_depth > tree->depth) ? _depth : tree->depth ;
    return tree;
 }
 

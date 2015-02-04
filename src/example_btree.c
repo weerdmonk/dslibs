@@ -48,6 +48,8 @@ int main(void)
    ds_btree_leaf_insert(bt, 8);
    ds_btree_leaf_insert(bt, 21);
 
+   printf("depth of btree = %d\n", bt->depth);
+
    printf("inorder\n");
    ds_btree_inorder(bt);
 
