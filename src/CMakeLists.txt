@@ -45,3 +45,15 @@ target_link_libraries(example_graph graph stack queue list)
 # install graph library and example
 install(TARGETS graph DESTINATION lib)
 install(TARGETS example_graph DESTINATION bin)
+
+
+# add btree library
+add_library(btree SHARED btree.c)
+
+# add btree example
+add_executable(example_btree example_btree.c)
+target_link_libraries(example_btree btree stack queue list)
+
+# install btree library and example
+install(TARGETS btree DESTINATION lib)
+install(TARGETS example_btree DESTINATION bin)
