@@ -86,7 +86,7 @@ void *ds_queue_deque(Queue q)
 	if (q->is_empty)
 	{
 		DS_LIB_INFO("ds_queue_deque: Queue is empty!");
-		return q;
+		return NULL;
 	}
 
    ds_list_delete_pos(q->l, &p_data, q->length - 1);
