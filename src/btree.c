@@ -21,6 +21,7 @@
  */
 #include <btree.h>
 
+static ds_btree_proc_func lvlorder_foo;
 
 BTree ds_btree_new(void)
 {
@@ -112,14 +113,17 @@ BTree ds_btree_inorder(BTree tree)
    return tree;
 }
 
-static void _ds_btree_print_level(BLeaf leaf, int level)
+static void _ds_btree_level(BLeaf leaf, int level)
 {
    if (leaf == NULL) return;
-   if (level == 0) printf("%d ", leaf->key);
+   if (level == 0)
+   {
+         if (lvlorder_foo) lvlorder_foo(&leaf);
+   }
    else
    {
-      _ds_btree_print_level(leaf->left, level - 1);
-      _ds_btree_print_level(leaf->right, level - 1);
+      _ds_btree_level(leaf->left, level - 1);
+      _ds_btree_level(leaf->right, level - 1);
    }
 
 }
@@ -133,12 +137,14 @@ BTree ds_btree_levelorder(BTree tree)
    }
 
    int i;
+   if (tree->dee_foo) lvlorder_foo = tree->dee_foo;
 
    for (i = 0; i <= tree->depth; i++)
    {
-      _ds_btree_print_level(tree->root, i);
-      printf("\n");
+      _ds_btree_level(tree->root, i);
    }
+
+   lvlorder_foo = NULL;
 }
 
 
