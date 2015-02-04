@@ -20,7 +20,9 @@
 
 typedef struct _BLeaf *BLeaf;
 
-typedef int (*ds_btree_proc_func)(void *data);
+typedef struct _BTree *BTree;
+
+typedef int (*ds_btree_proc_func)(BTree tree, BLeaf leaf, void *data);
 
 struct _BLeaf {
    struct _BLeaf *left;
@@ -28,12 +30,11 @@ struct _BLeaf {
    int key;
 };
 
-typedef struct _BTree *BTree;
-
 struct _BTree {
    int depth;
    BLeaf root;
    ds_btree_proc_func dee_foo;
+   void *dee_foo_data;
 };
 
 static inline void ds_btree_proc_func_add(BTree tree, ds_btree_proc_func func)

@@ -21,10 +21,9 @@
  */
 #include <btree.h>
 
-int btree_print(void *data)
+int btree_print(BTree tree, BLeaf leaf, void *data)
 {
-   BLeaf *p_lf = data;
-   printf("visited leaf: %d\n", (*p_lf)->key);
+   printf("visited leaf: %d\n", leaf->key);
 
    return 0;
 }

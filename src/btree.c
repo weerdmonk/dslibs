@@ -21,8 +21,6 @@
  */
 #include <btree.h>
 
-static ds_btree_proc_func lvlorder_foo;
-
 BTree ds_btree_new(void)
 {
    BTree bt = calloc(1, DS_BTREE_ALLOC_SIZE);
@@ -97,7 +95,7 @@ BTree ds_btree_inorder(BTree tree)
       {
          crawl = ds_stack_pop(s);
          /* insert processor function here */
-         if (tree->dee_foo) tree->dee_foo(&crawl);
+         if (tree->dee_foo) tree->dee_foo(tree, crawl, tree->dee_foo_data);
 
          crawl = crawl->right;
       }
@@ -113,21 +111,6 @@ BTree ds_btree_inorder(BTree tree)
    return tree;
 }
 
-static void _ds_btree_level(BLeaf leaf, int level)
-{
-   if (leaf == NULL) return;
-   if (level == 0)
-   {
-         if (lvlorder_foo) lvlorder_foo(&leaf);
-   }
-   else
-   {
-      _ds_btree_level(leaf->left, level - 1);
-      _ds_btree_level(leaf->right, level - 1);
-   }
-
-}
-
 BTree ds_btree_levelorder(BTree tree)
 {
    if (!tree)
@@ -136,15 +119,24 @@ BTree ds_btree_levelorder(BTree tree)
       return NULL;
    }
 
-   int i;
-   if (tree->dee_foo) lvlorder_foo = tree->dee_foo;
+   BLeaf leaf = tree->root;
+   Queue q = ds_queue_new();
 
-   for (i = 0; i <= tree->depth; i++)
+   while (leaf)
    {
-      _ds_btree_level(tree->root, i);
+      if (tree->dee_foo) tree->dee_foo(tree, leaf, tree->dee_foo_data);
+
+      if (leaf->left)
+         ds_queue_enque(q, leaf->left);
+
+      if (leaf->right)
+         ds_queue_enque(q, leaf->right);
+
+      leaf = ds_queue_deque(q);
    }
 
-   lvlorder_foo = NULL;
+   free(q->l);
+   free(q);
 }
 
 
