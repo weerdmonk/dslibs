@@ -28,6 +28,7 @@ struct _BLeaf {
    struct _BLeaf *left;
    struct _BLeaf *right;
    int key;
+   int depth;
 };
 
 struct _BTree {

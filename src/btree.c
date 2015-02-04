@@ -62,7 +62,9 @@ BTree ds_btree_leaf_insert(BTree tree, int data)
       (*p_crawl)->key = data;
    }
 
+   (*p_crawl)->depth = _depth;
    tree->depth = (_depth > tree->depth) ? _depth : tree->depth ;
+
    return tree;
 }
 
