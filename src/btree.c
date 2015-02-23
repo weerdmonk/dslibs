@@ -123,18 +123,32 @@ BTree ds_btree_levelorder(BTree tree)
 
    BLeaf leaf = tree->root;
    Queue q = ds_queue_new();
+   int nextlvlcount = 0, currlvlcount = 1;
 
    while (leaf)
    {
       if (tree->dee_foo) tree->dee_foo(tree, leaf, tree->dee_foo_data);
 
       if (leaf->left)
+      {
          ds_queue_enque(q, leaf->left);
+         nextlvlcount++;
+      }
 
       if (leaf->right)
+      {
          ds_queue_enque(q, leaf->right);
+         nextlvlcount++;
+      }
 
       leaf = ds_queue_deque(q);
+      currlvlcount--;
+
+      if (currlvlcount == 0)
+      {
+         currlvlcount = nextlvlcount;
+         nextlvlcount = 0;
+      }
    }
 
    free(q->l);
