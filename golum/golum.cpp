@@ -12,8 +12,12 @@ INT chatServer::MAXCLIENTS = 3;
 unsigned int CALLBACK chatServer::clientHandlerCB(void* param) {
     struct clientHandlerData *pData = (struct clientHandlerData*) param;
 
-    if (!(pData->pServer->clientHandlerFunc(pData->client))) return 0;
-    else return 1;
+    if (!(pData->pServer->clientHandlerFunc(pData->client))) {
+        delete(pData);
+        return 0;
+    }
+
+    return 1;
 }
 
 unsigned int chatServer::clientHandlerFunc(SOCKET client) {
@@ -26,14 +30,37 @@ unsigned int chatServer::clientHandlerFunc(SOCKET client) {
     INT recvBufLen = 512;
     CHAR recvBuf[512];
 
+#if DEBUG
+    sendBytes = send(client, "Hello", 5, 0);
+    if (sendBytes < 0) {
+        cout << "sendBytes = " << sendBytes << endl;
+        cout << "send failed with error: " << WSAGetLastError() << endl;
+        closesocket(client);
+        WSACleanup();
+        return 1;
+    }
+    else {
+        cout "send succeeded" << endl;
+    }
+#endif /* DEBUG */
+
     do {
         recvBytes = recv(client, recvBuf, recvBufLen, 0);
-        cout << "something received" << endl;
         if (recvBytes > 0) {
-            cout << recvBytes << "of data received" << endl;
+#if DEBUG
+            cout << recvBytes << " bytes of data received" << endl;
+#endif /* DEBUG */
+
             recvBuf[recvBytes] = '\0';
 
             sendBytes = send(client, recvBuf, recvBytes, 0);
+            if (sendBytes < 0) {
+                cout << "sendBytes = " << sendBytes << endl;
+                cout << "send failed with error: " << WSAGetLastError() << endl;
+                closesocket(client);
+                WSACleanup();
+                return 1;
+            }
         }
         else if (recvBytes == 0)
             cout << "Connection closing..." << endl;
@@ -113,12 +140,27 @@ VOID chatServer::Start() {
     SOCKET newClient;
     HANDLE clientHandler;
     while(this->nClients < MAXCLIENTS) {
-        if (newClient= accept(this->SERVER, NULL, NULL) == INVALID_SOCKET) {
+        newClient = accept(this->SERVER, NULL, NULL);
+        if (newClient == INVALID_SOCKET) {
             cout << "accept failed" << endl;     
             closesocket(this->SERVER);
             WSACleanup();
             return;
         }
+
+#if DEBUG
+    INT sendBytes = send(newClient, "Hello", 5, 0);
+    if (sendBytes < 0) {
+        cout << "sendBytes = " << sendBytes << endl;
+        cout << "send failed with error: " << WSAGetLastError() << endl;
+        closesocket(newClient);
+        WSACleanup();
+        return;
+    }
+    else {
+        cout << "send succeeded" << endl;
+    }
+#endif /* DEBUG */
 
         if (!addClient(newClient)) {
             cout << "addClient failed" << endl;     
