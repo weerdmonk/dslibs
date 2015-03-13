@@ -1,23 +1,57 @@
 
 #include <iostream>
-#include "chatServer.h"
+#include "golum.h"
 
 using namespace std;
 
-chatServer::WSDLLVERSION = MAKEWORD(2,2);
-chatServer::MAXCLIENTS = 3;
+#pragma comment(lib, "ws2_32.lib")
 
-UINT CALLBACK chatServer::clientHandler(LPVOID param) {
-    INT client = (SOCKET) param;
+WORD chatServer::WSDLLVERSION = MAKEWORD(2,2);
+INT chatServer::MAXCLIENTS = 3;
 
-    
+unsigned int CALLBACK chatServer::clientHandlerCB(void* param) {
+    struct clientHandlerData *pData = (struct clientHandlerData*) param;
+
+    if (!(pData->pServer->clientHandlerFunc(pData->client))) return 0;
+    else return 1;
+}
+
+unsigned int chatServer::clientHandlerFunc(SOCKET client) {
+    //INT clientID = (SOCKET) param;
+    //SOCKET client = this->CLIENTS[clientID];
+
+    cout << "clientHandlerFunc called" << endl;
+
+    INT recvBytes, sendBytes;
+    INT recvBufLen = 512;
+    CHAR recvBuf[512];
+
+    do {
+        recvBytes = recv(client, recvBuf, recvBufLen, 0);
+        cout << "something received" << endl;
+        if (recvBytes > 0) {
+            cout << recvBytes << "of data received" << endl;
+            recvBuf[recvBytes] = '\0';
+
+            sendBytes = send(client, recvBuf, recvBytes, 0);
+        }
+        else if (recvBytes == 0)
+            cout << "Connection closing..." << endl;
+        else  {
+            cout << "recv failed with error: " << WSAGetLastError() << endl;
+            closesocket(client);
+            WSACleanup();
+            return 1;
+        }
+    } while(recvBytes > 0);
 
     return 0;
 }
 
-BOOLEAN chatServer::initi_ws() {
-    if (!WSAStartup(WSDLLVERSION, &this->wsaData) {
-        WSACleanup;
+BOOLEAN chatServer::initWS() {
+    if (WSAStartup(MAKEWORD(2,2), &this->wsaData) != 0) {
+        cout << "WSAStartup failed" << endl;     
+        WSACleanup();
         return false;
     }
     return true;
@@ -29,28 +63,31 @@ chatServer::chatServer(UINT port_no) {
     else
         this->srv_port = port_no;
 
-    INT iRet;
+    this->nClients = 0;
 
-    srv_addr.sin_family = AF_INET;
-    srv_addr.sin_port = htons(srv_port);
-    srv_addr.in.sin_addr.s_addr = INADRR_ANY;
+    this->srv_addr.sin_family = AF_INET;
+    this->srv_addr.sin_port = htons(srv_port);
+    this->srv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
    
-    if (!init()) return;
+    if (!initWS()) return;
 
-    this->server = socket(srv_addr.sin_family, SOCK_STREAM, 0);
-    if (this->server == INVALID_SOCKET) {
-         WSACleanup();
-         return;
-    }
-
-    if (bind(this->server, (SOCKADDR*)&srv_addr, sizeof(srv_addr)) == SOCKET_ERROR)
-        closesocket(this->server);
+    this->SERVER = socket(srv_addr.sin_family, SOCK_STREAM, 0);
+    if (this->SERVER == INVALID_SOCKET) {
+        cout << "socket failed" << endl;     
         WSACleanup();
         return;
     }
 
-    if (listen(this->server, SOMAXCONN) == SOCKET_ERROR) {
-        closesocket(this->server);
+    if (bind(this->SERVER, (SOCKADDR*)&srv_addr, sizeof(srv_addr)) == SOCKET_ERROR) {
+        cout << "bind failed" << endl;     
+        closesocket(this->SERVER);
+        WSACleanup();
+        return;
+    }
+
+    if (listen(this->SERVER, SOMAXCONN) == SOCKET_ERROR) {
+        cout << "listen failed" << endl;     
+        closesocket(this->SERVER);
         WSACleanup();
         return;
     }
@@ -62,7 +99,11 @@ BOOLEAN chatServer::addClient(SOCKET client) {
     this->CLIENTS.push_back(client);
     ++this->nClients;
 
-    clientHandler = (HANDLE) _beginthreadex(NULL, 0, this->clientHandlerCB, nClients, 0, NULL);
+    struct clientHandlerData *pData = new(struct clientHandlerData);
+    pData->client = client;
+    pData->pServer = this;
+
+    clientHandler = (HANDLE) _beginthreadex(NULL, 0, &chatServer::clientHandlerCB, pData, 0, NULL);
     this->CLIENT_HANDLERS.push_back(clientHandler);
 
     return true;
@@ -71,20 +112,22 @@ BOOLEAN chatServer::addClient(SOCKET client) {
 VOID chatServer::Start() {
     SOCKET newClient;
     HANDLE clientHandler;
-    while(nClients < MAXCLIENTS) {
-        if (newClient= accept(this->server, NULL, NULL) == INVALID_SOCKET) {
-            closesocket(this->server);
+    while(this->nClients < MAXCLIENTS) {
+        if (newClient= accept(this->SERVER, NULL, NULL) == INVALID_SOCKET) {
+            cout << "accept failed" << endl;     
+            closesocket(this->SERVER);
             WSACleanup();
             return;
         }
 
         if (!addClient(newClient)) {
+            cout << "addClient failed" << endl;     
             closesocket(newClient);
-            closesocket(this->server);
+            closesocket(this->SERVER);
             WSACleanup();
             return;
         }
     }
 
-    return true;
+    return;
 }

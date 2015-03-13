@@ -1,6 +1,9 @@
 
-#include <windows.h>
+#pragma once
+
 #include <winsock2.h>
+#include <windows.h>
+#include <process.h>
 #include <vector>
 
 class chatServer {
@@ -14,13 +17,16 @@ private:
     std::vector<SOCKET>              CLIENTS;
     std::vector<HANDLE>              CLIENT_HANDLERS;
     UINT                        srv_port;
+    INT                         nClients;
 
     /* private methods*/
     BOOLEAN initWS();
     BOOLEAN addClient(SOCKET client);
     
     /* private callbacks*/
-    UINT CALLBACK clientHandlerCB(LPVOID param);
+    unsigned int chatServer::clientHandlerFunc(SOCKET client);
+
+    static unsigned int CALLBACK clientHandlerCB(void *param);
 
 public:
     inline VOID setWsaVersion(WORD version) {
@@ -35,4 +41,10 @@ public:
     ~chatServer();
 
     VOID Start();
-}
+};
+
+struct clientHandlerData {
+    SOCKET client;
+    chatServer *pServer;
+};
+
