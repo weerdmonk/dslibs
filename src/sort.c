@@ -127,7 +127,7 @@ void quick_sort(int A[], int lo, int hi)
 void quicker_sort(int A[], int lo, int hi)
 {
    int P,p,i,t;
-   if ((hi - lo) == 10)
+   if ((hi - lo) == 32)
    {
       insertion_sort(A, hi - lo);
    }   
@@ -168,33 +168,39 @@ void generate_sequence(int A[], int n) {
    }
 }
 
+static struct timeval t_start;
+
+static inline void start()
+{
+   gettimeofday(&t_start, NULL);
+}
+
+static inline void stop()
+{
+   struct timeval t_end;
+   gettimeofday(&t_end, NULL);
+   unsigned long long t = 1000 * (t_end.tv_sec - t_start.tv_sec) + (t_end.tv_usec - t_start.tv_usec) / 1000;
+   printf("time taken = %llu\n", t);
+}
+
 int main(int argc, char ** argv)
 {
    int arr[] = {5, 10, 9, 6, 4, 7, 3, 2, 8, 1};
    int seq[1000000];
    int i;
-   clock_t begin, end;
-   double time_taken;
 
    generate_sequence(seq, 1000000);
 
-   begin = clock();
+   start();
 
    //insertion_sort(seq, 1000000);
    //selection_sort(seq, 1000000);
-   //bubble_sort(arr, 10);
-   quicker_sort(seq, 0, 999999);
+   //bubble_sort(seq, 10);
+   quick_sort(seq, 0, 999999); 
+   //quicker_sort(seq, 0, 999999);
 
-   end = clock();
-   time_taken = end - begin;
-   time_taken /= CLOCKS_PER_SEC;
+   stop();
 
-   //for(i = 0; i < 1000000; i++)
-   // {
-   //    printf("%d\n", seq[i]);
-   // }
-
-   printf("time_taken = %f\n", time_taken);
 
    return 0;
 }
