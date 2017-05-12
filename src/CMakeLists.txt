@@ -57,3 +57,27 @@ target_link_libraries(example_btree btree stack queue list)
 # install btree library and example
 install(TARGETS btree DESTINATION lib)
 install(TARGETS example_btree DESTINATION bin)
+
+
+# add sort library
+add_library(sort SHARED sort.c)
+
+# add sort example
+add_executable(example_sort example_sort.c)
+target_link_libraries(example_sort sort )
+
+# install sort library and example
+install(TARGETS sort DESTINATION lib)
+install(TARGETS example_sort DESTINATION bin)
+
+
+# add heap library
+add_library(heap SHARED heap.c)
+
+#add heap example
+add_executable(example_heap example_heap.c)
+target_link_libraries(example_heap heap m)
+
+# install heap library and example
+install(TARGETS heap DESTINATION lib)
+install(TARGETS example_heap DESTINATION bin)
