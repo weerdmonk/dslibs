@@ -72,12 +72,12 @@ install(TARGETS example_sort DESTINATION bin)
 
 
 # add heap library
-add_library(heap SHARED heap.c)
+add_library(maxheap SHARED maxheap.c)
 
 #add heap example
-add_executable(example_heap example_heap.c)
-target_link_libraries(example_heap heap m)
+add_executable(example_maxheap example_maxheap.c)
+target_link_libraries(example_maxheap maxheap m)
 
 # install heap library and example
-install(TARGETS heap DESTINATION lib)
-install(TARGETS example_heap DESTINATION bin)
+install(TARGETS maxheap DESTINATION lib)
+install(TARGETS example_maxheap DESTINATION bin)

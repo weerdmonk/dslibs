@@ -1,19 +1,19 @@
 
 /*
  * dslibs v0.1
- * heap implementation v0.1
+ * maxheap implementation v0.1
  * weerdmonk May2017
  *
  */
 
-#include <heap.h>
+#include <maxheap.h>
 
 void ds_maxheap_heapsort(int *A, int n)
 {
     int i, tmp;
     if (!A) return;
 
-    maxHeap mh = ds_maxheap_from_arr(A, n);
+    ds_max_heap mh = ds_maxheap_from_arr(A, n);
     if (!mh) return;
 
     ds_maxheap_heapify(mh);
@@ -30,12 +30,12 @@ void ds_maxheap_heapsort(int *A, int n)
     free(mh);
 }
 
-maxHeap ds_maxheap_from_arr(int *A, int n)
+ds_max_heap ds_maxheap_from_arr(int *A, int n)
 {
-    maxHeap mh;
+    ds_max_heap mh;
     if (!A) return NULL;
 
-    mh  = (maxHeap)malloc(sizeof(struct max_heap));
+    mh  = (ds_max_heap)malloc(sizeof(struct ds_max_heap_t));
     if (!mh)
     {
         return NULL;
@@ -51,9 +51,9 @@ maxHeap ds_maxheap_from_arr(int *A, int n)
 }
     
 
-maxHeap ds_maxheap_new(int size)
+ds_max_heap ds_maxheap_new(int size)
 {
-    maxHeap mh = (maxHeap)malloc(sizeof(struct max_heap));
+    ds_max_heap mh = (ds_max_heap)malloc(sizeof(struct ds_max_heap_t));
     if (!mh)
     {
         return NULL;
@@ -73,7 +73,7 @@ maxHeap ds_maxheap_new(int size)
     return mh;
 }
 
-void ds_maxheap_adjust(maxHeap mh, int idx)
+void ds_maxheap_adjust(ds_max_heap mh, int idx)
 {
     if (!mh || !mh->arr) return;
 
@@ -99,7 +99,7 @@ void ds_maxheap_adjust(maxHeap mh, int idx)
     mh->arr[_parent(j)] = item;
 }
 
-void ds_maxheap_insert(maxHeap mh, int data)
+void ds_maxheap_insert(ds_max_heap mh, int data)
 {
     int i, j;
     if (!mh || !mh->arr) return;
@@ -120,7 +120,7 @@ void ds_maxheap_insert(maxHeap mh, int data)
     ++mh->N;
 }
 
-void ds_maxheap_heapify(maxHeap mh)
+void ds_maxheap_heapify(ds_max_heap mh)
 {
     int i;
     if (!mh || !mh->arr) return;

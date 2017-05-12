@@ -5,7 +5,7 @@
  * weerdmonk May2017
  */
 
-#include <heap.h>
+#include <maxheap.h>
 #include <time.h>
 
 void generate_sequence(int A[], int n)
@@ -29,7 +29,7 @@ void print_arr(int A[], int n)
 int main(int argc, char **argv)
 {
     int i;
-    maxHeap h;
+    ds_max_heap h;
     int seq[1000000];
     int arr[] = {101, 45, 2, 17, 11, 21, 79, 31};
     clock_t begin, end;
