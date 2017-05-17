@@ -15,7 +15,7 @@
 
 /* TODO
  * dynamic stack (predifined max capacity)
- * stack free API 
+ * stack free API
  * graph API to return list of adjacent vertices
  *
  */
@@ -112,13 +112,14 @@ static void dfs_iterate(Graph g, int v, List visited)
    free(open);
 }
 
-Graph ds_graph_dfs(Graph g)
+Graph ds_graph_dfs_iterative(Graph g)
 {
+
    int v = 0;
 
    if (!g)
    {
-      DS_LIB_ERR("ds_graph_dfs: supplied argument 1 is not a valid graph!");
+      DS_LIB_ERR("ds_graph_dfs_iterative: supplied argument 1 is not a valid graph!");
       return NULL;
    }
 
@@ -154,13 +155,13 @@ void dfs_recurse(Graph g, int v, unsigned char visited[])
 
 }
 
-Graph ds_graph_dfs2(Graph g)
+Graph ds_graph_dfs_recursive(Graph g)
 {
    int i = 0;
 
    if (!g)
    {
-      DS_LIB_ERR("ds_graph_dfs2: supplied argument 1 is not a valid graph!");
+      DS_LIB_ERR("ds_graph_dfs_recursive: supplied argument 1 is not a valid graph!");
       return NULL;
    }
 
@@ -189,7 +190,7 @@ Graph ds_graph_bfs(Graph g)
 
    if (!g)
    {
-      DS_LIB_ERR("ds_graph_dfs2: supplied argument 1 is not a valid graph!");
+      DS_LIB_ERR("ds_graph_bfs: supplied argument 1 is not a valid graph!");
       return NULL;
    }
 

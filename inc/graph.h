@@ -34,9 +34,9 @@ Graph ds_graph_edge_add(Graph g, int src, int dest);
 
 Graph ds_graph_edge_del(Graph g, int src, int dest);
 
-Graph ds_graph_dfs(Graph g);
+Graph ds_graph_dfs_iterative(Graph g);
 
-Graph ds_grpah_dfs2(Graph g);
+Graph ds_graph_dfs_recursive(Graph g);
 
 Graph ds_graph_bfs(Graph g);
 

@@ -15,7 +15,7 @@
 
 /* TODO
  * dynamic stack (predifined max capacity)
- * stack free API 
+ * stack free API
  * graph API to return list of adjacent vertices
  *
  */
@@ -65,11 +65,11 @@ int main(void)
    ds_graph_edge_add(g, 6, 3);
    ds_graph_edge_add(g, 7, 0);
 
-   printf("directeness of graph %u\n", g->directed);
+   printf("directeness of graph: %u\n", g->directed);
 
    for (l = &(g->adjlist[i]); i < 8; i++, l = &(g->adjlist[i]))
    {
-      printf("printing for vertex %d\n", i);
+      printf("\nprinting for vertex: %d\n", i);
       for(ln=l->head;ln!=NULL;ln=ln->next)
       {
          printf("list node data = %d\n", *((int*)ln->data));
@@ -77,13 +77,13 @@ int main(void)
       ln = NULL;
    }
 
-   printf("dfs\n");
-   ds_graph_dfs(g);
+   printf("\niterative dfs\n");
+   ds_graph_dfs_iterative(g);
 
-   printf("dfs2\n");
-   ds_graph_dfs2(g);
+   printf("\nrecursive dfs\n");
+   ds_graph_dfs_recursive(g);
 
-   printf("bfs\n");
+   printf("\nbfs\n");
    ds_graph_bfs(g);
 
    return 0;
