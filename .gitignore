@@ -7,8 +7,13 @@
 #ignore ctags files
 tags
 
-# ignore cmake build directory
+# ignore cmake build directories
 build
+debug
+release
+Build
+Debug
+Release
 
 # ignore gcc output file
 a.out
