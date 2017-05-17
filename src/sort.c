@@ -17,18 +17,18 @@
 
 void insertion_sort(int A[], int n)
 {
-   int i,j,t;
-   for(i = 1; i < n; i++)
-   {
-      t = A[i];
-      j = i;
-      while((j > 0) && (A[j - 1] > t))
-      {
-         A[j] = A[j - 1];
-         j--;
-      }
-      A[j] = t;
-   }
+	int i,j,t;
+	for(i = 1; i < n; i++)
+	{
+		t = A[i];
+		j = i;
+		while((j > 0) && (A[j - 1] > t))
+		{
+			A[j] = A[j - 1];
+			j--;
+		}
+		A[j] = t;
+	}
 }
 
 void shell_sort(int A[], int n)
@@ -44,21 +44,21 @@ void shell_sort(int A[], int n)
  */
 void selection_sort(int A[], int n)
 {
-   int i,j,minI,t;
-   for(i = 0; i < n; i++)
-   {
-      minI = i;
-      for(j = i; j < n; j++)
-      {
-         if (A[j] < A[minI]) minI = j;
-      }
-      if (minI != i)
-      {
-         t = A[i];
-         A[i] = A[minI];
-         A[minI] = t;
-      }
-   }
+	int i,j,minI,t;
+	for(i = 0; i < n; i++)
+	{
+		minI = i;
+		for(j = i; j < n; j++)
+		{
+			if (A[j] < A[minI]) minI = j;
+		}
+		if (minI != i)
+		{
+			t = A[i];
+			A[i] = A[minI];
+			A[minI] = t;
+		}
+	}
 }
 
 /*
@@ -70,22 +70,22 @@ void selection_sort(int A[], int n)
  */
 void bubble_sort(int A[], int n)
 {
-   int i,j,t,newI;
-   for(i = n; i > 0; i--)
-   {
-      newI = 0;
-      for(j = 0; j < n; j++)
-      {
-         if (A[j - 1] > A[j])
-         {
-            t = A[j - 1];
-            A[j - 1] = A[j];
-            A[j] = t;
-            newI = j;
-         }
-      }
-      i = newI;
-   }
+	int i,j,t,newI;
+	for(i = n; i > 0; i--)
+	{
+		newI = 0;
+		for(j = 0; j < n; j++)
+		{
+			if (A[j - 1] > A[j])
+			{
+				t = A[j - 1];
+				A[j - 1] = A[j];
+				A[j] = t;
+				newI = j;
+			}
+		}
+		i = newI;
+	}
 }
 
 /* algorithm is to chose a pivot element and partition
@@ -95,34 +95,34 @@ void bubble_sort(int A[], int n)
  */
 void quick_sort(int A[], int lo, int hi)
 {
-   int P,p,i,t;
-   if (lo < hi)
-   {
-      /* partition the array into two sub array */
-      P = hi; /* choose pivot as last index */
-      p = lo; /* choose an index variable to calculate position of pivot */
-      /* start moving elements based on comparision with pivot */
-      for(i = lo; i <= hi; i++)
-      {
-         if (A[i] < A[P])
-         {
-            if (i != p)
-            {
-               t = A[i];
-               A[i] = A[p];
-               A[p] = t;
-            }
-            p++;
-         }
-      }
-      /* bring pivot element to its right place */
-      t = A[P];
-      A[P] = A[p];
-      A[p] = t;
-      /* recursive calls on subarrays */
-      quick_sort(A, lo, p - 1);
-      quick_sort(A, p + 1, hi);
-   }
+	int P,p,i,t;
+	if (lo < hi)
+	{
+		/* partition the array into two sub array */
+		P = hi; /* choose pivot as last index */
+		p = lo; /* choose an index variable to calculate position of pivot */
+		/* start moving elements based on comparision with pivot */
+		for(i = lo; i <= hi; i++)
+		{
+			if (A[i] < A[P])
+			{
+				if (i != p)
+				{
+					t = A[i];
+					A[i] = A[p];
+					A[p] = t;
+				}
+				p++;
+			}
+		}
+		/* bring pivot element to its right place */
+		t = A[P];
+		A[P] = A[p];
+		A[p] = t;
+		/* recursive calls on subarrays */
+		quick_sort(A, lo, p - 1);
+		quick_sort(A, p + 1, hi);
+	}
 }
 
 /* almost quick sort, only that for smaller ranges of
@@ -131,36 +131,36 @@ void quick_sort(int A[], int lo, int hi)
  */
 void quicker_sort(int A[], int lo, int hi)
 {
-   int P,p,i,t;
-   if ((hi - lo) == 32)
-   {
-      insertion_sort(A, hi - lo);
-   }   
-   else if (lo < hi)
-   {
-      /* partition the array into two sub array */
-      P = hi; /* choose pivot as last index */
-      p = lo; /* choose an index variable to calculate position of pivot */
-      /* start moving elements based on comparision with pivot */
-      for(i = lo; i <= hi; i++)
-      {
-         if (A[i] < A[P])
-         {
-            if (i != p)
-            {
-               t = A[i];
-               A[i] = A[p];
-               A[p] = t;
-            }
-            p++;
-         }
-      }
-      /* bring pivot element to its right place */
-      t = A[P];
-      A[P] = A[p];
-      A[p] = t;
-      /* recursive calls on subarrays */
-      quicker_sort(A, lo, p - 1);
-      quicker_sort(A, p + 1, hi);
-   }
+	int P,p,i,t;
+	if ((hi - lo) == 32)
+	{
+		insertion_sort(A, hi - lo);
+	}
+	else if (lo < hi)
+	{
+		/* partition the array into two sub array */
+		P = hi; /* choose pivot as last index */
+		p = lo; /* choose an index variable to calculate position of pivot */
+		/* start moving elements based on comparision with pivot */
+		for(i = lo; i <= hi; i++)
+		{
+			if (A[i] < A[P])
+			{
+				if (i != p)
+				{
+					t = A[i];
+					A[i] = A[p];
+					A[p] = t;
+				}
+				p++;
+			}
+		}
+		/* bring pivot element to its right place */
+		t = A[P];
+		A[P] = A[p];
+		A[p] = t;
+		/* recursive calls on subarrays */
+		quicker_sort(A, lo, p - 1);
+		quicker_sort(A, p + 1, hi);
+	}
 }
