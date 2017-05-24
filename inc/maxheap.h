@@ -13,29 +13,40 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define _parent(i)  (int)floor(((i) - 1) / 2)
-#define _left(i)    (2 * (i)) + 1
-#define _right(i)   (2 * (i)) + 2
+#define parent(i)      (int)((((int)i) - 1) >> 1)
+#define left(i)        ((((int)i) << 1) + 1)
+#define right(i)       ((((int)i) << 1) + 2)
+#define is_leaf(mh, i) (left((i)) > (mh)->N)
+#define is_node(mh, i) (left((i)) <= (mh)->N)
 
-
-struct ds_max_heap_t {
+struct ds_maxheap_t {
     int *arr;
+    unsigned char is_arr_external;
     int size;
     int N;
 };
 
-typedef struct ds_max_heap_t *ds_max_heap;
+typedef struct ds_maxheap_t* ds_maxheap;
 
-void ds_maxheap_heapsort(int *A, int n);
+#define DS_MAXHEAP_SIZE  sizeof(struct ds_maxheap_t)
+#define DS_MAXHEAP_EMPTY NULL
 
-ds_max_heap ds_maxheap_from_arr(int *A, int n);
+ds_maxheap ds_maxheap_new(int size);
 
-ds_max_heap ds_maxheap_new(int size);
+void ds_maxheap_delete(ds_maxheap mh);
 
-void ds_maxheap_adjust(ds_max_heap mh, int idx);
+void ds_maxheap_adjust(ds_maxheap mh, int idx);
 
-void ds_maxheap_insert(ds_max_heap mh, int data);
+void ds_maxheap_insert(ds_maxheap mh, int data);
 
-void ds_maxheap_heapify(ds_max_heap mh);
+int ds_maxheap_remove_root(ds_maxheap mh);
+
+void ds_maxheap_build_heap(ds_maxheap mh);
+
+ds_maxheap ds_maxheap_from_array(int *array, int arr_size);
+
+void ds_maxheap_heapsort(ds_maxheap mh);
+
+void ds_maxheap_heapsort_array(int *array, int arr_size);
 
 #endif /* MAXHEAP_H */
