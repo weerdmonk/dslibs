@@ -14,5 +14,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 # set include directory
 include_directories("${PROJECT_SOURCE_DIR}/inc")
 
-# add directories to recurse into
+# add subdirectories
 add_subdirectory(src)
+add_subdirectory(examples)
+
+# add dslibs library
+add_library(dslibs SHARED src/list.c src/stack.c src/queue.c src/btree.c src/graph.c src/sort.c src/maxheap.c)
+
+# install dslibs library
