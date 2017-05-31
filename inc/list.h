@@ -9,71 +9,52 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include <stdlib.h>
-#include <error.h>
+typedef struct LNode_t *LNode;
 
-#define DS_LIST_ALLOC_SIZE		sizeof(struct _List)
-#define DS_LIST_NODE_SIZE		sizeof(struct _LNode)
+typedef struct List_t *List;
 
-// FIXME move structure declarations to source file. header will be exported.
+typedef int (*ds_list_callback)(List l, void* node_data, void *cb_data);
 
-typedef struct _LNode *LNode;
+void ds_list_callback_add(List l, ds_list_callback cb, void *cb_data);
 
-struct _LNode {
-   void *data;
-   struct _LNode *next;
-   struct _LNode *prev;
-};
+void ds_list_callback_remove(List l);
 
-typedef struct _List *List;
+List ds_list_new(void *p_data);
 
-struct _List {
-   LNode head;
-   LNode tail;
-};
+void ds_list_delete(List l, unsigned char should_free_data);
 
-LNode _ds_list_node_new(void *data);
+List ds_list_append(List l, void *p_data);
 
-List ds_list_new(void *data);
+List ds_list_prepend(List l, void *p_data);
 
-void ds_list_del(List l);
+LNode ds_list_search(List l, void *p_data);
 
-void ds_list_free(List *p_l);
+List ds_list_insert_after(List l, LNode node, void *p_data);
 
-List ds_list_append(List l, void *data);
+List ds_list_insert_before(List l, LNode node, void *p_data);
 
-List ds_list_append_val(List l, unsigned int data);
+List ds_list_delete_node(List l, LNode node, void **p_data);
 
-List ds_list_prepend(List l, void *data);
+List ds_list_delete_head(List l, void **p_data);
 
-List ds_list_prepend_val(List l, unsigned int data);
+List ds_list_delete_tail(List l, void **p_data);
 
-List ds_list_insert_pos(List l, void *data, int pos);
+List ds_list_update_node(List l, LNode node, void *p_new_data, void **p_old_data);
 
-List ds_list_insert_pos_val(List l, unsigned int data, int pos);
+unsigned int ds_list_count(List l);
 
-List ds_list_delete_pos(List l, void **data, int pos);
+unsigned int ds_list_traverse_forward(List l, LNode node);
 
-List ds_list_delete_pos_val(List l, unsigned int *data, int pos);
+unsigned int ds_list_traverse_reverse(List l, LNode node);
 
-List ds_list_delete_start(List l, void **data);
+LNode ds_list_get_head(List l);
 
-List ds_list_delete_start_val(List l, unsigned int *data);
+LNode ds_list_get_tail(List l);
 
-List ds_list_delete_end(List l, void **data);
+LNode ds_list_get_next_node(List l, LNode node);
 
-List ds_list_delete_end_val(List l, unsigned int *data);
+LNode ds_list_get_prev_node(List l, LNode node);
 
-List ds_list_free_pos(List l, int pos);
-
-LNode ds_list_search(List l, void *data, int *pos);
-
-LNode ds_list_search_val(List l, unsigned int data, int *pos);
-
-List ds_list_update_pos(List l, void *data_new, void **data_old, int pos);
-
-List ds_list_update_pos_val(List l, unsigned int data_new, unsigned int *data_old, int pos);
-
-int ds_list_count(List l);
+void ds_list_get_data(LNode node, void **p_data);
 
 #endif /* LIST_H */
