@@ -6,9 +6,7 @@
  *
  */
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <strings.h>
 #include <error.h>
 #include <list.h>
 #include <queue.h>
