@@ -6,115 +6,133 @@
  *
  */
 
-/* TODO:
- * improve error handling macros
- * make fucntions static
- * optimize design
- */
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <strings.h>
+#include <error.h>
+#include <list.h>
 #include <queue.h>
+
+#define DS_QUEUE_ALLOC_SIZE		sizeof(struct Queue_t)
+
+struct Queue_t {
+  List l;
+  unsigned char is_empty;
+  unsigned int length;
+};
 
 Queue ds_queue_new(void)
 {
+  Queue q = calloc(1, DS_QUEUE_ALLOC_SIZE);
+  if (!q)
+  {
+    DS_C_ERR(__func__);
+    return NULL;
+  }
 
-	Queue q = calloc(1, DS_QUEUE_ALLOC_SIZE);
-	if (!q)
-	{
-		DS_C_ERR(__func__);
-		return NULL;
-	}
+  q->l = ds_list_new(NULL);
+  if (!q->l)
+  {
+    DS_LIB_ERR("ds_queue_new: could not create queue!");
+    free(q);
+    return NULL;
+  }
 
-   q->l = ds_list_new(NULL);
-	if (!q->l)
-	{
-		free(q);
-		return NULL;
-		
-	}
+  return q;
+}
 
-	q->qstart = q->qend = q->l->head;
+void ds_queue_delete(Queue q)
+{
+  if (!q)
+  {
+    DS_LIB_ERR("ds_queue_enqueue: supplied argument 1 is not a valid Queue!");
+    return;
+  }
+
+  if (q->l != NULL)
+  {
+    ds_list_delete(q->l, 1);
+  }
+
+  free(q);
+}
+
+unsigned char ds_queue_empty_check(Queue q)
+{
+  return (q->is_empty = (q->length == 0));
 }
 
 Queue ds_queue_enque(Queue q, void *data)
 {
-	if (!q)
-	{
-		DS_LIB_ERR("ds_queue_enqueue: supplied argument 1 is not a valid Queue!");
-		return NULL;
-	}
+  if (!q)
+  {
+    DS_LIB_ERR("ds_queue_enqueue: supplied argument 1 is not a valid Queue!");
+    return NULL;
+  }
 
-	if (!data)
-	{
-		DS_LIB_ERR("ds_queue_enque: no data to enque!");
-		return q;
-	}
+  if (!data)
+  {
+    DS_LIB_ERR("ds_queue_enque: no data to enque!");
+    return q;
+  }
 
-   q->length++;
-   ds_list_prepend(q->l, data);
-	q->qend = q->l->head;
-   if (!q->qstart) q->qstart = q->l->tail;
+  ds_list_prepend(q->l, data);
+  q->length++;
 
-	return q;
-}
-
-Queue ds_queue_enque_val(Queue q, unsigned int data)
-{
-	if (!q)
-	{
-		DS_LIB_ERR("ds_queue_enque_val: supplied argument 1 is not a valid Queue!");
-		return NULL;
-	}
-
-   q->length++;
-   ds_list_prepend_val(q->l, data);
-	q->qend = q->l->head;
-   if (!q->qstart) q->qstart = q->l->tail;
-
-	return q;
+  return q;
 }
 
 void *ds_queue_deque(Queue q)
 {
-   void *p_data;
+  void *p_data;
 
-	if (!q)
-	{
-		DS_LIB_ERR("ds_queue_deque: supplied argument 1 is not a valid Queue!");
-		return NULL;
-	}
+  if (!q)
+  {
+    DS_LIB_ERR("ds_queue_deque: supplied argument 1 is not a valid Queue!");
+    return NULL;
+  }
 
-	if (q->is_empty)
-	{
-		DS_LIB_INFO("ds_queue_deque: Queue is empty!");
-		return NULL;
-	}
+  if (q->is_empty)
+  {
+    DS_LIB_INFO("ds_queue_deque: Queue is empty!");
+    return NULL;
+  }
 
-   ds_list_delete_pos(q->l, &p_data, q->length - 1);
-   q->length--;
-	_ds_queue_empty_check(q);
+  ds_list_delete_tail(q->l, &p_data);
+  q->length--;
+  ds_queue_empty_check(q);
 
-	return p_data;
+  return p_data;
 }
 
-unsigned int ds_queue_deque_val(Queue q)
+void *ds_queue_peek(Queue q)
 {
-	unsigned int data;
+  void *p_data;
 
-	if (!q)
-	{
-		DS_LIB_ERR("ds_queue_deque_val: supplied argument 1 is not a valid Queue!");
-		return 0xFFFFFFFF;
-	}
+  if (!q)
+  {
+    DS_LIB_ERR("ds_queue_peek: supplied argument 1 is not a valid Queue!");
+    return NULL;
+  }
 
-	if (q->is_empty)
-	{
-		DS_LIB_INFO("ds_queue_deque_val: Queue is empty!");
-		return 0xFFFFFFFF;
-	}
+  if (q->is_empty)
+  {
+    DS_LIB_INFO("ds_queue_peek: Queue is empty!");
+    return NULL;
+  }
 
-   ds_list_delete_pos_val(q->l, &data, q->length - 1);
-   q->length--;
-   _ds_queue_empty_check(q);
+  ds_list_get_data(ds_list_get_tail(q->l), &p_data);
 
-	return data;
+  return p_data;
+}
+
+unsigned int ds_queue_get_length(Queue q)
+{
+  if (!q)
+  {
+    DS_LIB_ERR("ds_queue_get_length: supplied argument 1 is not a valid Queue!");
+    return -1;
+  }
+
+  return q->length;
 }
